@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files.
 Name: redhat-rpm-config
 Version: 8.0.45
-Release: 15%{dist}
+Release: 16
 License: GPL
 Group: Development/System
 Source: redhat-rpm-config-%{version}.tar.gz
@@ -10,7 +10,7 @@ Source2: kmodtool
 Patch0: redhat-rpm-config-java.patch
 Patch1: redhat-rpm-config-find-requires.patch
 Patch2: redhat-rpm-config-kmp.patch
-Patch3: redhat-rpm-config-fedora-version-fc71.patch
+Patch3: redhat-rpm-config-olpc-version-2.patch
 Patch4: redhat-rpm-config-find-provides.patch
 BuildArch: noarch
 #Requires: rpmbuild(VendorConfig) <= 4.1
@@ -51,6 +51,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_prefix}/lib/rpm/redhat
 
 %changelog
+* Fri Jun 15 2007 Tom "spot" Callaway <tcallawa@redhat.com> 8.0.45-16
+- olpc variant
+
 * Wed Apr 11 2007 Jon Masters <jcm@redhat.com> 8.0.45-15
 - Add modalias tags to kernel module packages (kmods) for tracking.
 - Further information is available at http://www.kerneldrivers.org/.
