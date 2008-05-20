@@ -1,10 +1,11 @@
 Summary: Red Hat specific rpm configuration files.
 Name: redhat-rpm-config
 Version: 9.0.2
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Group: Development/System
 Source: redhat-rpm-config-%{version}.tar.bz2
+Patch0: limit-smp-16-threads.patch
 BuildArch: noarch
 Requires: mktemp
 # if rpm-build is present (thus building rpms), we need newer for 
@@ -21,6 +22,7 @@ Red Hat specific rpm configuration files.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
@@ -33,6 +35,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_prefix}/lib/rpm/redhat
 
 %changelog
+* Tue May 20 2008 Dennis Gilmore <dennis@ausil.us> - 9.0.2-2
+- limit smp to 16 threads
+
 * Thu Apr 03 2008 Jon Masters <jcm@redhat.com> - 9.0.2-1
 - Remove smp dependencies
 - Update config.guess|sub files
