@@ -1,13 +1,14 @@
 Summary: Red Hat specific rpm configuration files.
 Name: redhat-rpm-config
 Version: 9.0.3
-Release: 4%{?dist}
+Release: 5%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
 Source: redhat-rpm-config-%{version}.tar.bz2
 Patch0: redhat-rpm-config-9.0.3-fix-requires.patch
 Patch1: limit-smp-16-threads.patch 
+Patch2: redhat-rpm-config-9.0.3-always_delete_buildroot_at_install.patch
 BuildArch: noarch
 Requires: mktemp
 BuildRoot: %{_tmppath}/%{name}-root
@@ -19,6 +20,7 @@ Red Hat specific rpm configuration files.
 %setup -q
 %patch0 -p0
 %patch1 -p1
+%patch2 -p1
 
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
@@ -31,6 +33,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_prefix}/lib/rpm/redhat
 
 %changelog
+* Tue Jul 21 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 9.0.3-5
+- always delete %%buildroot as first step of %%install (as long as %buildroot is not /)
+
 * Mon Feb 16 2009 Dennis Gilmore <dennis@ausil.us> - 9.0.3-4
 - limit _smp_flags to -j16
 
