@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files.
 Name: redhat-rpm-config
 Version: 9.0.3
-Release: 5%{?dist}
+Release: 6%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -9,6 +9,7 @@ Source: redhat-rpm-config-%{version}.tar.bz2
 Patch0: redhat-rpm-config-9.0.3-fix-requires.patch
 Patch1: limit-smp-16-threads.patch 
 Patch2: redhat-rpm-config-9.0.3-always_delete_buildroot_at_install.patch
+Patch3: redhat-rpm-config-9.0.3-filtering-macros.patch 
 BuildArch: noarch
 Requires: mktemp
 BuildRoot: %{_tmppath}/%{name}-root
@@ -33,6 +34,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_prefix}/lib/rpm/redhat
 
 %changelog
+* Fri Aug 21 2009 Chris Weyl <cweyl@alumni.drew.edu> - 9.0.3-6
+- add filtering system macros, w/o backporting other updates (#516240)
+
 * Tue Jul 21 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 9.0.3-5
 - always delete %%buildroot as first step of %%install (as long as %buildroot is not /)
 
