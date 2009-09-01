@@ -44,7 +44,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - add filtering system macros, w/o backporting other updates (#516240)
 
 * Tue Jul 21 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 9.0.3-10
-- always delete %%buildroot as first step of %%install (as long as %buildroot is not /)
+- always delete %%buildroot as first step of %%install (as long as %%buildroot is not /)
 
 * Wed Jun 03 2009 Adam Jackson <ajax@redhat.com> 9.0.3-9
 - limit-smp-16-threads.patch: Rediff so we don't ship a .orig file (#500316)
