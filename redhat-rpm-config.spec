@@ -38,7 +38,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - add filtering system macros, w/o backporting other updates (#516240)
 
 * Tue Jul 21 2009 Tom "spot" Callaway <tcallawa@redhat.com> - 9.0.3-5
-- always delete %%buildroot as first step of %%install (as long as %buildroot is not /)
+- always delete %%buildroot as first step of %%install (as long as %%buildroot is not /)
 
 * Mon Feb 16 2009 Dennis Gilmore <dennis@ausil.us> - 9.0.3-4
 - limit _smp_flags to -j16
