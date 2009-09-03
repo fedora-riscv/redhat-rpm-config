@@ -1,7 +1,7 @@
-Summary: Red Hat specific rpm configuration files.
+Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.0.3
-Release: 11%{?dist}
+Release: 12%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -29,6 +29,8 @@ Red Hat specific rpm configuration files.
 %patch4 -p1
 %patch5 -p1
 
+%build
+
 %install
 make DESTDIR=${RPM_BUILD_ROOT} install
 
@@ -40,6 +42,11 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_prefix}/lib/rpm/redhat
 
 %changelog
+* Thu Sep 03 2009 Paul Howarth <paul@city-fan.org> 9.0.3-12
+- redhat-rpm-config-9.0.3-filtering-macros.patch: Rediff so we don't ship a .orig file
+- add (empty) %%build section
+- fix unescaped macros in changelog
+
 * Fri Aug 21 2009 Chris Weyl <cweyl@alumni.drew.edu> 9.0.3-11
 - add filtering system macros, w/o backporting other updates (#516240)
 
@@ -132,7 +139,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - Added patch for find-requires. Waiting on write access to public CVS.
 
 * Tue Sep 12 2006 Deepak Bhole <dbhole@redhat.com> 8.0.45-6
-- Fix brp-java-repack-jars to work with builddirs that aren't %name-%version
+- Fix brp-java-repack-jars to work with builddirs that aren't %%name-%%version
 
 * Mon Sep 11 2006 Fernando Nasser <fnasser@redhat.com> - 8.0.45-5
 - Fix order of tokens in find command (thanks mikeb@redhat.com)
@@ -276,7 +283,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - Remove tracking dependency
 
 * Wed Oct 16 2002 Phil Knirsch <pknirsch@redhat.com> 8.0.3-2
-- Added fix for outdated config.[sub|guess] files in %configure section
+- Added fix for outdated config.[sub|guess] files in %%configure section
 
 * Wed Oct 16 2002 Elliot Lee <sopwith@redhat.com> 8.0.3-1
 - New release that blows up on unpackaged files and missing doc files.
@@ -285,7 +292,7 @@ rm -rf ${RPM_BUILD_ROOT}
 - don't redefine everything in macros, just what we need to
 
 * Mon Sep 16 2002 Alexander Larsson <alexl@redhat.com> 8.0.1
-- Add debug package support to %__spec_install_post
+- Add debug package support to %%__spec_install_post
 
 * Tue Sep  3 2002 Bill Nottingham <notting@redhat.com> 8.0-1
 - bump version
