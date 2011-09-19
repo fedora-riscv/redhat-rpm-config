@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.1.0
-Release: 12%{?dist}
+Release: 13%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -55,6 +55,11 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/rpm/*
 
 %changelog
+* Mon Sep 19 2011 Jon Masters <jcm@redhat.com> - 9.1.0-13
+- rework a patch we had been sitting on to fix F15 ARM hardfp bootstrap
+- redhat-rpm-config-9.1.0-arm.patch: do NOT make armv7hl default on v7
+- redhat-rpm-config-9.1.0-arm.patch: disable Thumb on v7hl systems
+
 * Sat Jul 02 2011 Jon Masters <jcm@jonmasters.org> - 9.1.0-12
 - redhat-rpm-config-9.1.0-arm.patch: Make armv7hl default on all v7 ARM
 
