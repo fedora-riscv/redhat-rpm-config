@@ -1,11 +1,11 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.1.0
-Release: 14%{?dist}
+Release: 15%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
-URL: http://git.fedoraproject.org/git/redhat-rpm-config
+URL: http://git.fedorahosted.org/git/redhat-rpm-config
 Source: redhat-rpm-config-%{version}.tar.bz2
 Patch0: redhat-rpm-config-9.1.0-strict-python-bytecompile.patch
 Patch1: redhat-rpm-config-9.1.0-fix-requires.patch
@@ -22,7 +22,6 @@ BuildArch: noarch
 Requires: mktemp
 Requires: rpm >= 4.6.0
 BuildRequires: libtool
-BuildRoot: %{_tmppath}/%{name}-root
 
 %description
 Red Hat specific rpm configuration files.
@@ -55,6 +54,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/rpm/*
 
 %changelog
+* Tue Oct 18 2011 Jens Petersen <petersen@redhat.com> - 9.1.0-15
+- add armv5tel to ghc_arches
+- fix URL (Ville Skyttä)
+
 * Thu Oct  6 2011 Jens Petersen <petersen@redhat.com> - 9.1.0-14
 - add armv7hl to ghc_arches
 
