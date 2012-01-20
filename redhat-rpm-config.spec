@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.1.0
-Release: 15%{?dist}
+Release: 16%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -54,6 +54,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/rpm/*
 
 %changelog
+* Fri Jan 20 2012 Jens Petersen <petersen@redhat.com> - 9.1.0-16
+- add ghc_arches_with_ghci
+
 * Tue Oct 18 2011 Jens Petersen <petersen@redhat.com> - 9.1.0-15
 - add armv5tel to ghc_arches
 - fix URL (Ville Skyttä)
