@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.1.0
-Release: 37%{?dist}
+Release: 37.1%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -97,6 +97,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/rpm/*
 
 %changelog
+* Wed May 29 2013 Adam Jackson <ajax@redhat.com> 9.1.0-37.1
+- redhat-config-*: Use + to append rather than %%rename, to protect against
+  multiple -specs= ending up in the command line. (#892837)
+
 * Fri Nov  9 2012 Toshio Kuratomi <toshio@fedoraproject.org> - 9.1.0-37
 - Patch to fix spaces in java jar files
   https://bugzilla.redhat.com/show_bug.cgi?id=872737
