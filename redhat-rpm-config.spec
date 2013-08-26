@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.1.0
-Release: 37.1%{?dist}
+Release: 37.2%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -45,6 +45,8 @@ Patch15: 0001-Drop-un-setting-LANG-and-DISPLAY-in-various-build-st.patch
 Patch16: redhat-rpm-config-9.1.0-filtering-spaces-in-filename.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=872737
 Patch17: redhat-rpm-config-9.1.0-java-repack-spaces-in-filenames.patch
+# backport _pkgdocdir macro from F20
+Patch23: redhat-rpm-config-9.1.0-pkgdocdir.patch
 BuildArch: noarch
 Requires: coreutils
 Requires: perl-srpm-macros
@@ -76,6 +78,7 @@ Red Hat specific rpm configuration files.
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
+%patch23 -p1
 
 %build
 
@@ -97,6 +100,9 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/rpm/*
 
 %changelog
+* Mon Aug 26 2013 Jens Petersen <petersen@redhat.com> - 9.1.0-37.2
+- backport new _pkgdocdir macro from F20
+
 * Wed May 29 2013 Adam Jackson <ajax@redhat.com> 9.1.0-37.1
 - redhat-config-*: Use + to append rather than %%rename, to protect against
   multiple -specs= ending up in the command line. (#892837)
