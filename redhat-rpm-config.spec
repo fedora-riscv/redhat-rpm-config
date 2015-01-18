@@ -1,7 +1,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 9.1.0
-Release: 54%{?dist}
+Release: 55%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -69,6 +69,7 @@ Patch25: redhat-rpm-config-9.1.0-libtool-hardened-build.patch
 # https://bugzilla.redhat.com/show_bug.cgi?id=986871
 Patch26: redhat-rpm-config-9.1.0-unversioned-docdirs.patch
 %endif
+Patch27: redhat-rpm-config-9.1.0-mono.patch
 
 BuildArch: noarch
 Requires: coreutils
@@ -113,6 +114,7 @@ Red Hat specific rpm configuration files.
 %if 0%{?fedora} >= 20
 %patch26 -p1
 %endif
+%patch27 -p1
 
 %build
 
@@ -134,6 +136,10 @@ rm -rf ${RPM_BUILD_ROOT}
 %{_sysconfdir}/rpm/*
 
 %changelog
+* Sun Jan 18 2015 Jason L Tibbitts III <tibbs@math.uh.edu> - 9.1.0-55
+- Add _monodir and _monogacdir from F21 so that we can have consistent
+  packaging guidelines across supported Fedora versions.
+
 * Wed Sep 04 2013 Karsten Hopp <karsten@redhat.com> 9.1.0-54
 - update config.sub with ppc64p7 support (from Fedora automake)
 

@@ -1,0 +1,9 @@
+diff -up redhat-rpm-config-9.1.0/macros.mono-srpm.orig redhat-rpm-config-9.1.0/macros.mono-srpm
+--- redhat-rpm-config-9.1.0/macros.mono-srpm.orig	2015-01-18 15:55:51.009472124 -0600
++++ redhat-rpm-config-9.1.0/macros.mono-srpm	2015-01-18 15:57:11.646951234 -0600
+@@ -1,2 +1,5 @@
+ # arches that mono builds on
+ %mono_arches %{ix86} x86_64 sparc sparcv9 ia64 %{arm} alpha s390x ppc ppc64
++
++%_monodir %{_prefix}/lib/mono
++%_monogacdir %{_monodir}/gac
