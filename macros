@@ -91,7 +91,7 @@
     /usr/lib/rpm/brp-strip-comment-note %{__strip} %{__objdump} \
     } \
     /usr/lib/rpm/brp-strip-static-archive %{__strip} \
-    /usr/lib/rpm/brp-python-bytecompile %{__python} %{?_python_bytecompile_errors_terminate_build} \
+    %{?py_auto_byte_compile:/usr/lib/rpm/brp-python-bytecompile %{__python} %{?_python_bytecompile_errors_terminate_build}} \
     /usr/lib/rpm/brp-python-hardlink \
     %{!?__jar_repack:/usr/lib/rpm/redhat/brp-java-repack-jars} \
 %{nil}
@@ -111,6 +111,10 @@
 #
 # Should missing buildids terminate a build?
 %_missing_build_ids_terminate_build    1
+
+#
+## Automatically compile python files
+%py_auto_byte_compile 1
 
 #
 ## Should python bytecompilation errors terminate a build?

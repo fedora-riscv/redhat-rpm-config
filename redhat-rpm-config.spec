@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 27
+Version: 28
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -135,6 +135,10 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Tue May 19 2015 Florian Festi <ffesti@redhat.com> 28-1
+- Add %py_auto_byte_compile macro controlling Python bytecompilation
+(#1222941)
+
 * Wed Dec 10 2014 Dan Horák <dan[at]danny.cz> - 27-1
 - Explicitly set -mcpu/-mtune for ppc64p7 and ppc64le to override rpm defaults
 
