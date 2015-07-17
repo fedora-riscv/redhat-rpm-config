@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 28
+Version: 29
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -66,6 +66,7 @@ Requires: perl-srpm-macros
 Requires: ocaml-srpm-macros
 Requires: gnat-srpm-macros
 Requires: ghc-srpm-macros
+Requires: go-srpm-macros
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
 Requires: zip
@@ -135,6 +136,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Jul 17 2015 Florian Festi <ffesti@redhat.com> 29-1
+- Add Requires: go-srpm-macros (#1243922)
+
 * Tue May 19 2015 Florian Festi <ffesti@redhat.com> 28-1
 - Add %py_auto_byte_compile macro controlling Python bytecompilation
 (#1222944)
