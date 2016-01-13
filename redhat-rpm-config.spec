@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 36
-Release: 1%{?dist}
+Release: 1%{?dist}.1
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -67,6 +67,7 @@ Requires: ocaml-srpm-macros
 Requires: gnat-srpm-macros
 Requires: ghc-srpm-macros
 Requires: go-srpm-macros
+Requires: python-srpm-macros
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
 Requires: zip
@@ -136,6 +137,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Mon Mar 28 2016 Orion Poplawski <orion@cora.nwra.com> 36-1.1
+- Add Requires: python-srpm-macros
+
 * Fri Jul 17 2015 Florian Festi <ffesti@redhat.com> 36-1
 - Add Requires: go-srpm-macros (#1243922)
 
