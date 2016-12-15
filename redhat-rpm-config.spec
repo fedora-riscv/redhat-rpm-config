@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 44
+Version: 45
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -34,6 +34,7 @@ Source104: macros.ldc-srpm
 # Other misc macros
 Source150: macros.dwz
 Source151: macros.kmp
+Source152: macros.vpath
 
 # Build policy scripts
 Source201: brp-implant-ident-static
@@ -131,6 +132,7 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/kmod.prov
 %{_rpmconfigdir}/macros.d/macros.*-srpm
 %{_rpmconfigdir}/macros.d/macros.dwz
+%{_rpmconfigdir}/macros.d/macros.vpath
 
 %files -n kernel-rpm-macros
 %dir %{rrcdir}/find-provides.d
@@ -144,6 +146,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Dec 15 2016 Jason L Tibbitts III <tibbs@math.uh.edu> - 45-1
+- Add macros.vpath (https://fedorahosted.org/fpc/attachment/ticket/655)
+
 * Mon Oct 31 2016 Kalev Lember <klember@redhat.com> - 44-1
 - Add ldc_arches macro
 
