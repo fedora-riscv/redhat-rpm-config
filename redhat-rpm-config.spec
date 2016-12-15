@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 41
+Version: 42
 Release: 2%{?dist}
 # No version specified.
 License: GPL+
@@ -33,6 +33,7 @@ Source103: macros.nodejs-srpm
 # Other misc macros
 Source150: macros.dwz
 Source151: macros.kmp
+Source152: macros.vpath
 
 # Build policy scripts
 Source201: brp-implant-ident-static
@@ -126,6 +127,7 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/kmod.prov
 %{_rpmconfigdir}/macros.d/macros.*-srpm
 %{_rpmconfigdir}/macros.d/macros.dwz
+%{_rpmconfigdir}/macros.d/macros.vpath
 
 %files -n kernel-rpm-macros
 %dir %{rrcdir}/find-provides.d
@@ -139,6 +141,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Dec 15 2016 Jason L Tibbitts III <tibbs@math.uh.edu> - 42-2
+- Add macros.vpath (https://fedorahosted.org/fpc/ticket/655)
+
 * Thu Aug 18 2016 Jason L Tibbitts III <tibbs@math.uh.edu> - 41-2
 - Add dependency on fpc-srpm-macros.
 
