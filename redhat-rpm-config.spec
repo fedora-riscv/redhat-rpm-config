@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 63
-Release: 1%{?dist}
+Release: 2%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -64,6 +64,7 @@ BuildArch: noarch
 BuildRequires: perl-generators
 Requires: coreutils
 
+Requires: cmake-rpm-macros
 Requires: fedora-rpm-macros
 Requires: fpc-srpm-macros
 Requires: ghc-srpm-macros
@@ -142,6 +143,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Dec 21 2017 Björn Esser <besser82@fedoraproject.org> - 63-2
+- Add Requires: cmake-rpm-macros for CMake auto-{provides,requires} (#1498894)
+
 * Thu Feb 02 2017 Dan Horák <dan[at]danny.cz> - 63-1
 - set zEC12 as minimum architecture level for s390(x) (#1404991)
 
