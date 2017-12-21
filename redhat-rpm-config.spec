@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 67
-Release: 1%{?dist}
+Release: 2%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -64,6 +64,7 @@ BuildArch: noarch
 BuildRequires: perl-generators
 Requires: coreutils
 
+Requires: cmake-rpm-macros
 Requires: fedora-rpm-macros
 Requires: fpc-srpm-macros
 Requires: ghc-srpm-macros
@@ -144,6 +145,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Dec 21 2017 Björn Esser <besser82@fedoraproject.org> - 67-2
+- Add Requires: cmake-rpm-macros for CMake auto-{provides,requires} (#1498894)
+
 * Mon Jul 31 2017 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 67-1
 - Define _include_gdx_index (RHBZ #1476722)
 - Move _debuginfo_subpackages and _debugsource_packages from rpm (RHBZ #1476735)
