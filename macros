@@ -150,7 +150,7 @@
     %{?__brp_strip_comment_note} \
     } \
     %{?__brp_strip_static_archive} \
-    %{?py_auto_byte_compile:%{?__brp_python_bytecompile} \
+    %{?py_auto_byte_compile:%{?__brp_python_bytecompile}} \
     %{?__brp_python_hardlink} \
 %{nil}
 
