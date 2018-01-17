@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 71
+Version: 72
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -147,6 +147,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Wed Feb 21 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 72-1
+- Backport macroizing build root policies for consistent disable/override
+
 * Tue Feb 20 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 71-1
 - Backport %%set_build_flags
 
