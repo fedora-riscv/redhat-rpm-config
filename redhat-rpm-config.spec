@@ -6,8 +6,8 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 63
-Release: 2%{?dist}
+Version: 64
+Release: 1%{?dist}
 # No version specified.
 License: GPL+
 Group: Development/System
@@ -36,6 +36,7 @@ Source105: macros.valgrind-srpm
 Source150: macros.dwz
 Source151: macros.kmp
 Source152: macros.vpath
+Source153: macros.ldconfig
 
 # Dependency generator scripts (deprecated)
 Source300: find-provides
@@ -129,6 +130,7 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/kmod.prov
 %{_rpmconfigdir}/macros.d/macros.*-srpm
 %{_rpmconfigdir}/macros.d/macros.dwz
+%{_rpmconfigdir}/macros.d/macros.ldconfig
 %{_rpmconfigdir}/macros.d/macros.vpath
 
 %files -n kernel-rpm-macros
@@ -143,6 +145,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 64-1
+- Add macros.ldconfig
+
 * Thu Dec 21 2017 Björn Esser <besser82@fedoraproject.org> - 63-2
 - Add Requires: cmake-rpm-macros for CMake auto-{provides,requires} (#1498894)
 
