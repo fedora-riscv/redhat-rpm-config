@@ -25,6 +25,46 @@
 %_debuginfo_subpackages 1
 
 #==============================================================================
+# ---- compiler flags.
+
+# C compiler flags.  This is traditionally called CFLAGS in makefiles.
+# Historically also available as %%{optflags}, and %%build sets the
+# environment variable RPM_OPT_FLAGS to this value.
+%build_cflags %{optflags}
+
+# C++ compiler flags.  This is traditionally called CXXFLAGS in makefiles.
+%build_cxxflags %{optflags}
+
+# Fortran compiler flags.  Makefiles use both FFLAGS and FCFLAGS as
+# the corresponding variable names.
+%build_fflags %{optflags} -I%{_fmoddir}
+
+# Link editor flags.  This is usually called LDFLAGS in makefiles.
+# (Some makefiles use LFLAGS instead.)  The default value assumes that
+# the flags, while intended for ld, are still passed through the gcc
+# compiler driver.  At the beginning of %%build, the environment
+# variable RPM_LD_FLAGS to this value.
+%build_ldflags -Wl,-z,relro %{_hardened_ldflags}
+
+# Expands to shell code to seot the compiler/linker environment
+# variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, LDFLAGS if they have
+# not been set already.  RPM_OPT_FLAGS and RPM_LD_FLAGS have already
+# been set implicitly at the start of the %%build section.
+%set_build_flags \
+  CFLAGS="${CFLAGS:-%{build_cflags}}" ; export CFLAGS ; \
+  CXXFLAGS="${CXXFLAGS:-%{build_cxxflags}}" ; export CXXFLAGS ; \
+  FFLAGS="${FFLAGS:-%{build_fflags}}" ; export FFLAGS ; \
+  FCFLAGS="${FCFLAGS:-%{build_fflags}}" ; export FCFLAGS ; \
+  LDFLAGS="${LDFLAGS:-%{build_ldflags}}" ; export LDFLAGS
+
+# Deprecated names.  For backwards compatibility only.
+%__global_cflags %{build_cflags}
+%__global_cxxflags %{build_cxxflags}
+%__global_fflags %{build_fflags}
+%__global_fcflags %{build_fflags}
+%__global_ldflags %{build_ldflags}
+
+#==============================================================================
 # ---- configure and makeinstall.
 #
 %_configure_gnuconfig_hack	1
@@ -35,11 +75,7 @@
 # way to turn it back off.
 # %_configure_disable_silent_rules 1
 %configure \
-  CFLAGS="${CFLAGS:-%__global_cflags}" ; export CFLAGS ; \
-  CXXFLAGS="${CXXFLAGS:-%__global_cxxflags}" ; export CXXFLAGS ; \
-  FFLAGS="${FFLAGS:-%__global_fflags}" ; export FFLAGS ; \
-  FCFLAGS="${FCFLAGS:-%__global_fcflags}" ; export FCFLAGS ; \
-  LDFLAGS="${LDFLAGS:-%__global_ldflags}"; export LDFLAGS; \
+  %{set_build_flags}; \
   [ "%_configure_gnuconfig_hack" = 1 ] && for i in $(find $(dirname %{_configure}) -name config.guess -o -name config.sub) ; do \
       [ -f /usr/lib/rpm/redhat/$(basename $i) ] && %{__rm} -f $i && %{__cp} -fv /usr/lib/rpm/redhat/$(basename $i) $i ; \
   done ; \
@@ -149,12 +185,6 @@
 %_hardened_ldflags	%{?_hardened_build:%{_hardening_ldflags}}
 
 %__global_compiler_flags	-O2 -g -pipe -Wall -Werror=format-security -Wp,-D_FORTIFY_SOURCE=2 -fexceptions -fstack-protector-strong --param=ssp-buffer-size=4 -grecord-gcc-switches %{_hardened_cflags}
-
-%__global_cflags	%{optflags}
-%__global_cxxflags	%{optflags}
-%__global_fflags	%{optflags} -I%_fmoddir
-%__global_fcflags	%{optflags} -I%_fmoddir
-%__global_ldflags	-Wl,-z,relro %{_hardened_ldflags}
 
 #==============================================================================
 # ---- Generic auto req/prov filtering macros
