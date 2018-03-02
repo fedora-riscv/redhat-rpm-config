@@ -3,10 +3,10 @@ include: /usr/lib/rpm/rpmrc
 optflags: i386 %{__global_compiler_flags} -m32 -march=i386 -mtune=generic -fasynchronous-unwind-tables
 optflags: i486 %{__global_compiler_flags} -m32 -march=i486 -fasynchronous-unwind-tables
 optflags: i586 %{__global_compiler_flags} -m32 -march=i586 -mtune=generic -fasynchronous-unwind-tables
-optflags: i686 %{__global_compiler_flags} -m32 -march=i686 -fasynchronous-unwind-tables
+optflags: i686 %{__global_compiler_flags} -m32 -march=i686 -mtune=generic -fasynchronous-unwind-tables
 optflags: athlon %{__global_compiler_flags} -m32 -march=athlon -fasynchronous-unwind-tables
 optflags: ia64 %{__global_compiler_flags}
-optflags: x86_64 %{__global_compiler_flags} -m64 -mtune=generic
+optflags: x86_64 %{__global_compiler_flags} -m64 -mtune=generic -fasynchronous-unwind-tables
 
 optflags: alpha %{__global_compiler_flags} -mieee
 optflags: alphaev5 %{__global_compiler_flags} -mieee -mcpu=ev5
@@ -24,12 +24,12 @@ optflags: sparc64v %{__global_compiler_flags} -m64 -mcpu=niagara
 
 optflags: m68k %{__global_compiler_flags}
 
-optflags: ppc %{__global_compiler_flags} -m32
+optflags: ppc %{__global_compiler_flags} -m32 -funwind-tables
 optflags: ppciseries %{__global_compiler_flags} -m32
 optflags: ppcpseries %{__global_compiler_flags} -m32
-optflags: ppc64 %{__global_compiler_flags} -m64
-optflags: ppc64p7 %{__global_compiler_flags} -m64 -O3 -mcpu=power7 -mtune=power7
-optflags: ppc64le %{__global_compiler_flags} -m64 -mcpu=power8 -mtune=power8
+optflags: ppc64 %{__global_compiler_flags} -m64 -funwind-tables
+optflags: ppc64p7 %{__global_compiler_flags} -m64 -O3 -mcpu=power7 -mtune=power7 -funwind-tables
+optflags: ppc64le %{__global_compiler_flags} -m64 -mcpu=power8 -mtune=power8 -funwind-tables
 optflags: ppc64iseries %{__global_compiler_flags} -m64
 optflags: ppc64pseries %{__global_compiler_flags} -m64
 optflags: ppc8260 %{__global_compiler_flags} -m32
@@ -60,7 +60,7 @@ optflags: armv6l %{__global_compiler_flags} -march=armv6 -mfloat-abi=soft
 optflags: armv6hl %{__global_compiler_flags} -march=armv6 -mfpu=vfp -mfloat-abi=hard
 optflags: armv6hnl %{__global_compiler_flags} -march=armv6 -mfpu=neon -mfloat-abi=hard
 optflags: armv7l %{__global_compiler_flags} -march=armv7-a -mfloat-abi=soft
-optflags: armv7hl %{__global_compiler_flags} -march=armv7-a -mfpu=vfpv3-d16  -mfloat-abi=hard
+optflags: armv7hl %{__global_compiler_flags} -march=armv7-a -mfpu=vfpv3-d16 -mtune=generic-armv7-a -mabi=aapcs-linux -mfloat-abi=hard
 optflags: armv7hnl %{__global_compiler_flags} -march=armv7-a -mfpu=neon  -mfloat-abi=hard
 
 optflags: atarist %{__global_compiler_flags}
@@ -71,10 +71,10 @@ optflags: atariclone %{__global_compiler_flags}
 optflags: milan %{__global_compiler_flags}
 optflags: hades %{__global_compiler_flags}
 
-optflags: s390 %{__global_compiler_flags} -m31 -march=zEC12 -mtune=z13
-optflags: s390x %{__global_compiler_flags} -m64 -march=zEC12 -mtune=z13
+optflags: s390 %{__global_compiler_flags} -m31 -march=zEC12 -mtune=z13 -fasynchronous-unwind-tables
+optflags: s390x %{__global_compiler_flags} -m64 -march=zEC12 -mtune=z13 -fasynchronous-unwind-tables
 
-optflags: aarch64 %{__global_compiler_flags}
+optflags: aarch64 %{__global_compiler_flags} -fasynchronous-unwind-tables
 
 optflags: riscv64 %{__global_compiler_flags}
 

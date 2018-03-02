@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 75
+Version: 76
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -147,6 +147,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Mar  2 2018 Florian Weimer <fweimer@redhat.com> - 76-1
+- Synchronize compiler flags with Fedora 28
+
 * Thu Feb 22 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 75-1
 - Move %%end to %%ldconfig_scriptlets
 
