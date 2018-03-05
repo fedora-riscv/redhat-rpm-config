@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 64
+Version: 65
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -37,6 +37,7 @@ Source150: macros.dwz
 Source151: macros.kmp
 Source152: macros.vpath
 Source153: macros.ldconfig
+Source154: macros.forge
 
 # Dependency generator scripts (deprecated)
 Source300: find-provides
@@ -130,6 +131,7 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/kmod.prov
 %{_rpmconfigdir}/macros.d/macros.*-srpm
 %{_rpmconfigdir}/macros.d/macros.dwz
+%{_rpmconfigdir}/macros.d/macros.forge
 %{_rpmconfigdir}/macros.d/macros.ldconfig
 %{_rpmconfigdir}/macros.d/macros.vpath
 
@@ -145,6 +147,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Mon Mar 05 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 65-1
+- Add the forge macros.
+
 * Mon Jan 29 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 64-1
 - Add macros.ldconfig
 
