@@ -279,4 +279,4 @@ end
 %forgesetup(a:b:cDn:Tq) %setup %{?forgesetupargs} %{-a} %{-b} %{-c} %{-D} %{-n} %{-T} %{-q}
 
 # Convenience macro to relay computed arguments to %autosetup
-%forgeautosetup(a:b:cDn:TvNS:p) %autosetup %{?forgesetupargs} %{-a} %{-b} %{-c} %{-D} %{-n} %{-T} %{-v} %{-N} %{-S} %{-p}
+%forgeautosetup(a:b:cDn:TvNS:p:) %autosetup %{?forgesetupargs} %{-a} %{-b} %{-c} %{-D} %{-n} %{-T} %{-v} %{-N} %{-S} %{-p}
