@@ -2,3 +2,7 @@
 
 # A directory for rpm macros
 %rpmmacrodir /usr/lib/rpm/macros.d
+
+# A directory for appdata metainfo.  The value in <=F27 differs from the F28+
+# value.
+%_metainfodir %{_datadir}/appdata

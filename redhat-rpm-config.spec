@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 65
+Version: 66
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -147,6 +147,10 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Apr 20 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 66-1
+- Add %%_metainfodir macro.
+- %%forgeautosetup tweak to fix patch application.
+
 * Mon Mar 05 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 65-1
 - Add the forge macros.
 
