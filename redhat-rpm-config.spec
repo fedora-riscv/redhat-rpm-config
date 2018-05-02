@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 107
+Version: 108
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -105,8 +105,8 @@ Requires: %{_bindir}/grep
 Requires: %{_bindir}/sed
 Requires: %{_bindir}/xargs
 
-# -fstack-clash-protection and CET requires GCC 8.
-Conflicts: gcc < 8.0
+# -fstack-clash-protection and -fcf-protection require GCC 8.
+Conflicts: gcc < 8.0.1-0.22
 
 Provides: system-rpm-config = %{version}-%{release}
 
@@ -183,6 +183,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Wed May  2 2018 Florian Weimer <fweimer@redhat.com> - 108-1
+- Use plain -fcf-protection compiler flag, without -mcet (#1570823)
+
 * Fri Apr 20 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 107-1
 - Add %%_metainfodir macro.
 - %%forgeautosetup tweak to fix patch application.
