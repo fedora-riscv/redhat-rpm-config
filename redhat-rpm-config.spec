@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 78
+Version: 79
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -149,6 +149,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Aug 31 2018 Fabio Valentini <decathorpe@gmail.com> - 79-1
+- Allow overriding the date in forge's dist macro.
+
 * Fri Apr 20 2018 Jason L Tibbitts III <tibbs@math.uh.edu> - 78-1
 - Add %%_metainfodir macro.
 - %%forgeautosetup tweak to fix patch application.
