@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 108
+Version: 109
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -183,6 +183,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Aug 30 2018 Fabio Valentini <decathorpe@gmail.com> - 109-1
+- Allow overriding the date in forge's dist macro.
+
 * Wed May  2 2018 Florian Weimer <fweimer@redhat.com> - 108-1
 - Use plain -fcf-protection compiler flag, without -mcet (#1570823)
 

@@ -8,6 +8,7 @@
 #   Version   if applicable, set it with Version: <version>
 #   tag       if applicable
 #   commit    if applicable
+#   date      if applicable (to override the mtime of the Source archive)
 #
 # The macro will attempt to compute and set the following variables if they are
 # not already set by the packager:
@@ -255,7 +256,7 @@ if (distprefix == "") then
   distprefix = string.sub(rpm.expand("%{?commit}"), 1, 7)
 end
 if (distprefix ~= "") then
-  local dist = ".%([ -r %{_sourcedir}/%{archivename}.%{archiveext} ] && date +%Y%m%d -u -r %{_sourcedir}/%{archivename}.%{archiveext})%{scm}" .. string.gsub(distprefix, "-",".") .. rpm.expand("%{?dist}")
+  local dist = ".%{?date}%{!?date:%([ -r %{_sourcedir}/%{archivename}.%{archiveext} ] && date +%Y%m%d -u -r %{_sourcedir}/%{archivename}.%{archiveext})}%{scm}" .. string.gsub(distprefix, "-",".") .. rpm.expand("%{?dist}")
   explicitset("dist", dist)
 end
 -- Final spec variable summary if the macro was called with -i
@@ -271,7 +272,7 @@ if informative then
   rpm.expand("%{echo:  scm:             %{?scm}\\n}")
   rpm.expand("%{echo:  tag:             %{?tag}\\n}")
   rpm.expand("%{echo:  commit:          %{?commit}\\n}")
-  rpm.expand("%{echo:  dist:            %{?dist} (snapshot date is computed once %%{_sourcedir}/%%{archivename}.%%{archiveext} is available)\\n}")
+  rpm.expand("%{echo:  dist:            %{?dist} (snapshot date is either manually supplied or computed once %%{_sourcedir}/%%{archivename}.%%{archiveext} is available)\\n}")
 end
 }
 
