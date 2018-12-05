@@ -141,7 +141,7 @@
 %__brp_strip /usr/lib/rpm/brp-strip %{__strip}
 %__brp_strip_comment_note /usr/lib/rpm/brp-strip-comment-note %{__strip} %{__objdump}
 %__brp_strip_static_archive /usr/lib/rpm/brp-strip-static-archive %{__strip}
-%__brp_python_bytecompile /usr/lib/rpm/brp-python-bytecompile %{__python} %{?_python_bytecompile_errors_terminate_build}
+%__brp_python_bytecompile /usr/lib/rpm/brp-python-bytecompile "%{__python}" "%{?_python_bytecompile_errors_terminate_build}" "%{?_python_bytecompile_extra}"
 %__brp_python_hardlink /usr/lib/rpm/brp-python-hardlink
 %__brp_mangle_shebangs /usr/lib/rpm/redhat/brp-mangle-shebangs "%{?__brp_mangle_shebangs_exclude_from}" "%{?__brp_mangle_shebangs_exclude}"
 
@@ -179,6 +179,8 @@
 #
 ## Should python bytecompilation errors terminate a build?
 %_python_bytecompile_errors_terminate_build 1
+## Should python bytecompilation compile outisde python specific directories?
+%_python_bytecompile_extra 1
 
 # Use SHA-256 for FILEDIGESTS instead of default MD5
 %_source_filedigest_algorithm 8

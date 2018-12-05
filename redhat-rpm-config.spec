@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 109
+Version: 110
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -183,6 +183,10 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Wed Dec 05 2018 Miro Hrončok <mhroncok@redhat.com> - 110-1
+- Use the new brp-python-bytecompile API, allow to turn of automagic pybytecompilation
+  https://fedoraproject.org/wiki/Changes/No_more_automagic_Python_bytecompilation
+
 * Thu Aug 30 2018 Fabio Valentini <decathorpe@gmail.com> - 109-1
 - Allow overriding the date in forge's dist macro.
 
