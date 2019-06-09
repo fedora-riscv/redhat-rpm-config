@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 118
+Version: 119
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -188,6 +188,9 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Sun Jun 09 2019 Björn Persson <Bjorn@Rombobjörn.se> - 119-1
+- Add gpgverify
+
 * Mon Aug 20 2018 Kalev Lember <klember@redhat.com> - 118-1
 - Add aarch64 to ldc arches
 
