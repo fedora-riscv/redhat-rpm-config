@@ -40,6 +40,7 @@ Source151: macros.kmp
 Source152: macros.vpath
 Source153: macros.forge
 Source154: macros.ldconfig
+Source155: macros.fedora-misc
 
 # Build policy scripts
 # this comes from https://github.com/rpm-software-management/rpm/pull/344
@@ -60,6 +61,7 @@ Source400: dist.sh
 Source401: rpmsort
 Source402: symset-table
 Source403: kmodtool
+Source404: gpgverify
 
 # 2016-10-02 snapshots from http://git.savannah.gnu.org/gitweb/?p=config.git
 Source500: config.guess
@@ -135,6 +137,7 @@ install -p -m 444 -t %{buildroot}%{rrcdir} redhat-hardened-*
 install -p -m 444 -t %{buildroot}%{rrcdir} redhat-annobin-*
 install -p -m 755 -t %{buildroot}%{rrcdir} config.*
 install -p -m 755 -t %{buildroot}%{rrcdir} dist.sh rpmsort symset-table kmodtool
+install -p -m 755 -t %{buildroot}%{rrcdir} gpgverify
 install -p -m 755 -t %{buildroot}%{rrcdir} brp-*
 
 install -p -m 755 -t %{buildroot}%{rrcdir} find-*
@@ -156,6 +159,7 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{rrcdir}/rpmrc
 %{rrcdir}/brp-*
 %{rrcdir}/dist.sh
+%{rrcdir}/gpgverify
 %{rrcdir}/redhat-hardened-*
 %{rrcdir}/redhat-annobin-*
 %{rrcdir}/config.*
@@ -169,6 +173,7 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.forge
 %{_rpmconfigdir}/macros.d/macros.ldconfig
 %{_rpmconfigdir}/macros.d/macros.vpath
+%{_rpmconfigdir}/macros.d/macros.fedora-misc
 %doc buildflags.md
 
 %files -n kernel-rpm-macros
