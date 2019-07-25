@@ -1,2 +1,17 @@
 # gpgverify verifies signed sources. There is documentation in the script.
-%gpgverify %{_rpmconfigdir}/redhat/gpgverify
+%gpgverify(k:s:d:) %{lua:
+local script = rpm.expand("%{_rpmconfigdir}/redhat/gpgverify ")
+local keyring = rpm.expand("%{-k*}")
+local signature = rpm.expand("%{-s*}")
+local data = rpm.expand("%{-d*}")
+print(script)
+if keyring ~= "" then
+  print(rpm.expand("--keyring '%{SOURCE" .. keyring ..  "}' "))
+end
+if signature ~= "" then
+  print(rpm.expand("--signature '%{SOURCE" .. signature ..  "}' "))
+end
+if data ~= "" then
+  print(rpm.expand("--data '%{SOURCE" .. data ..  "}' "))
+end
+}
