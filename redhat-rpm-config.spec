@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 130
+Version: 131
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -202,6 +202,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Oct 31 2019 Miro Hrončok <mhroncok@redhat.com> - 131-1
+- Simplify the API if %%gpgverify.
+
 * Tue Jun 04 2019 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 130-1
 - New macro for wrapping text — %%wordwrap
 - Smal fix for %%listfiles with no arguments
