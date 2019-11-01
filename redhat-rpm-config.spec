@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 120
+Version: 121
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -188,8 +188,11 @@ install -p -m 755 -t %{buildroot}%{_rpmconfigdir} kmod.prov
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Nov 01 2019 Miro Hrončok <mhroncok@redhat.com> - 121-1
+- Fix the simple API of %%gpgverify.
+
 * Thu Oct 31 2019 Miro Hrončok <mhroncok@redhat.com> - 120-1
-- Simplify the API if %%gpgverify.
+- Simplify the API of %%gpgverify.
 
 * Sun Jun 09 2019 Björn Persson <Bjorn@Rombobjörn.se> - 119-1
 - Add gpgverify

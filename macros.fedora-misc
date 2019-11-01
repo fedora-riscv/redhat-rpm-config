@@ -6,12 +6,12 @@ local signature = rpm.expand("%{-s*}")
 local data = rpm.expand("%{-d*}")
 print(script)
 if keyring ~= "" then
-  print(rpm.expand("--keyring '%{SOURCE" .. keyring ..  "}' "))
+  print(rpm.expand("--keyring='%{SOURCE" .. keyring ..  "}' "))
 end
 if signature ~= "" then
-  print(rpm.expand("--signature '%{SOURCE" .. signature ..  "}' "))
+  print(rpm.expand("--signature='%{SOURCE" .. signature ..  "}' "))
 end
 if data ~= "" then
-  print(rpm.expand("--data '%{SOURCE" .. data ..  "}' "))
+  print(rpm.expand("--data='%{SOURCE" .. data ..  "}' "))
 end
 }
