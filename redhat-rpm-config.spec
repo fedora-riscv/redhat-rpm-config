@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 150
-Release: 1%{?dist}
+Release: 2%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -208,6 +208,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Oct 23 2020 Miro Hrončok <mhroncok@redhat.com> - 150-2
+- Add Python 3.10+ support to brp-python-bytecompile (#1830232)
+
 * Fri Feb 21 2020 Jason L Tibbitts III <tibbs@math.uh.edu> - 150-1
 - Add dependency on fonts-srpm-macros, as those have now been approved by FPC.
 
