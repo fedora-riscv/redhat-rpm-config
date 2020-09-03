@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 150
-Release: 2%{?dist}
+Release: 3%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -96,14 +96,15 @@ Requires: fpc-srpm-macros
 Requires: ghc-srpm-macros
 Requires: gnat-srpm-macros
 Requires: go-srpm-macros
+Requires: lua-srpm-macros
 Requires: nim-srpm-macros
 Requires: ocaml-srpm-macros
 Requires: openblas-srpm-macros
 Requires: perl-srpm-macros
 # ↓ Provides compileall2 Python module
 Requires: python-srpm-macros >= 3-46
-Requires: rust-srpm-macros
 Requires: qt5-srpm-macros
+Requires: rust-srpm-macros
 
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
@@ -208,6 +209,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Oct 30 2020 Michel Alexandre Salim <salimma@fedoraproject.org> - 150-3
+- Add Requires: lua-srpm-macros
+
 * Fri Oct 23 2020 Miro Hrončok <mhroncok@redhat.com> - 150-2
 - Add Python 3.10+ support to brp-python-bytecompile (#1830232)
 
