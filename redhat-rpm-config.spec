@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 172
+Version: 173
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -213,6 +213,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Fri Oct 30 2020 Florian Weimer <fweimer@redhat.com> - 173-1
+- x86_64: Re-add -fcf-protection to build flags (#1891308)
+
 * Fri Sep 11 2020 Miro Hrončok <mhroncok@redhat.com> - 172-1
 - Filter out LTO flags from %%extension flags macros
 - Fixes: rhbz#1877652

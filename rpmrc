@@ -6,7 +6,7 @@ optflags: i586 %{__global_compiler_flags} -m32 -march=i586 -mtune=generic -fasyn
 optflags: i686 %{__global_compiler_flags} -m32 -march=i686 -mtune=generic -msse2 -mfpmath=sse -mstackrealign -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection
 optflags: athlon %{__global_compiler_flags} -m32 -march=athlon -fasynchronous-unwind-tables -fstack-clash-protection
 optflags: ia64 %{__global_compiler_flags}
-optflags: x86_64 %{__global_compiler_flags} -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection
+optflags: x86_64 %{__global_compiler_flags} -m64 -mtune=generic -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection
 
 optflags: alpha %{__global_compiler_flags} -mieee
 optflags: alphaev5 %{__global_compiler_flags} -mieee -mcpu=ev5
