@@ -6,8 +6,8 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 150
-Release: 3%{?dist}
+Version: 151
+Release: 1%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -209,6 +209,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Sun Nov 29 2020 Miro Hrončok <mhroncok@redhat.com> - 151-1
+- BRP Python Bytecompile: Also detect Python files in /app/lib/pythonX.Y
+
 * Fri Oct 30 2020 Michel Alexandre Salim <salimma@fedoraproject.org> - 150-3
 - Add Requires: lua-srpm-macros
 
