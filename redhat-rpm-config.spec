@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 173
+Version: 174
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -213,6 +213,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Sun Nov 29 2020 Miro Hrončok <mhroncok@redhat.com> - 174-1
+- BRP Python Bytecompile: Also detect Python files in /app/lib/pythonX.Y
+
 * Fri Oct 30 2020 Florian Weimer <fweimer@redhat.com> - 173-1
 - x86_64: Re-add -fcf-protection to build flags (#1891308)
 
