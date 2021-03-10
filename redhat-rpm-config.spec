@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 174
+Version: 175
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -213,6 +213,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Wed Mar 10 2021 Kalev Lember <klember@redhat.com> - 175-1
+- BRP Python Bytecompile: Avoid hardcoding /usr/bin prefix for python
+
 * Sun Nov 29 2020 Miro Hrončok <mhroncok@redhat.com> - 174-1
 - BRP Python Bytecompile: Also detect Python files in /app/lib/pythonX.Y
 
