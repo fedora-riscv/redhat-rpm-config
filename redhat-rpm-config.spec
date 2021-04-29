@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 175
+Version: 176
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -111,6 +111,7 @@ Requires: perl-srpm-macros
 Requires: python-srpm-macros >= 3-46
 Requires: qt5-srpm-macros
 Requires: rust-srpm-macros
+Requires: rpmautospec-rpm-macros
 
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
@@ -213,6 +214,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu Apr 29 2021 Stephen Coady <scoady@redhat.com> - 176-1
+- Add Requires: rpmautospec-rpm-macros
+
 * Wed Mar 10 2021 Kalev Lember <klember@redhat.com> - 175-1
 - BRP Python Bytecompile: Avoid hardcoding /usr/bin prefix for python
 
