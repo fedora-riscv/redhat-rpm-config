@@ -1,0 +1,10 @@
+# Macros to constrain resource use during the build process
+
+# m: memory limit in MBs per core; default is 1024
+%limit_build(m:) \
+  _mem_per_process="%{-m:%{-m*}}%{!-m:1024}" \
+  _max_mem=$(awk '/MemTotal/ { print $2 }' /proc/meminfo) \
+  _max_jobs="$(($_max_mem / ($_mem_per_process * 1024)))" \
+  _cur_max_jobs="%{_smp_build_ncpus}" \
+  test "${_cur_max_jobs}" -gt "${_max_jobs}" && _cur_max_jobs="${_max_jobs}" && echo "Warning: Reducing build parallelism to -j${_max_jobs} because of memory limits" \
+  %global _smp_build_ncpus "${_cur_max_jobs}"
