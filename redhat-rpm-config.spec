@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 176
-Release: 2%{?dist}
+Release: 3%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -216,6 +216,12 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Sun Aug 15 2021 Michel Alexandre Salim <salimma@fedoraproject.org> - 176-3
+- Fix macros.build-constraints' %%limit_build
+  - number of CPUs will never be set to less than 1
+  - this now outputs build flag overrides to be used with %%make_build etc.
+  - add documentation
+
 * Sat Jul 24 2021 Michel Alexandre Salim <salimma@fedoraproject.org> - 176-2
 - Add macros.build-constraints
 - Keep the misc macros in alphabetical order
