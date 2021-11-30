@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 205
-Release: 1%{?dist}
+Release: 1%{?dist}.0.bdostest
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -107,7 +107,6 @@ Requires: nim-srpm-macros
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
 Requires: zip
-Requires: (annobin-plugin-gcc if gcc)
 
 # for brp-mangle-shebangs
 Requires: %{_bindir}/find
