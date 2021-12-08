@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 205
-Release: 1%{?dist}.0.bdostest
+Release: 1%{?dist}.1.bdostest
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -189,6 +189,12 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Wed Dec  8 2021 Siddhesh Poyarekar <siddhesh@redhat.com> - 205-1.1.bdostest
+- Disable annobin to allow annobin to build.
+
+* Wed Dec  8 2021 Siddhesh Poyarekar <siddhesh@redhat.com> - 205-1.0.bdostest
+- Prep to target gcc12 and use _FORTIFY_SOURCE=3.
+
 * Thu Nov 18 2021 Michal Domonkos <mdomonko@redhat.com> - 205-1
 - Drop kernel-rpm-macros subpackage & kmod.attr (new home: kernel-srpm-macros)
 

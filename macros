@@ -294,7 +294,7 @@ print(result)
 # ...except on armv7hl, which has an issue whose root-cause isn't
 # clear yet: https://bugzilla.redhat.com/show_bug.cgi?id=1951492
 # Use "%define _annotated_build" to enable.
-%_annobin_gcc_plugin	-specs=/usr/lib/rpm/redhat/redhat-annobin-cc1
+%_annobin_gcc_plugin	%dnl-specs=/usr/lib/rpm/redhat/redhat-annobin-cc1
 # The annobin plugin is not built for clang yet
 %_annobin_clang_plugin	%dnl-fplugin=/usr/lib64/clang/`clang -dumpversion`/lib/annobin.so
 %_annotation_plugin     %{?_annotated_build:%{expand:%%{_annobin_%{toolchain}_plugin}}}
