@@ -2,6 +2,7 @@ coreutils
 dwz
 rpm
 zip
+/bin/sh
 /usr/bin/bash
 /usr/bin/file
 /usr/bin/find
