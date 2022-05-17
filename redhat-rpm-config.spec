@@ -7,7 +7,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: 219
-Release: 1%{?dist}
+Release: 2%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -217,6 +217,10 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Tue May 17 2022 Miro Hrončok <mhroncok@redhat.com> - 219-2
+- Remove a tab character from the definition of %%__global_compiler_flags
+- Fixes: rhbz#2083296
+
 * Wed May 18 2022 Jason L Tibbitts III <j@tib.bs> - 219-1
 - Add java_arches macro.
 
