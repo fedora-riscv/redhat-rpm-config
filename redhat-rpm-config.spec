@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 217
+Version: 218
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -106,6 +106,7 @@ Requires: package-notes-srpm-macros
 Requires: fpc-srpm-macros
 Requires: gnat-srpm-macros
 Requires: nim-srpm-macros
+Requires: ansible-srpm-macros
 %endif
 
 Requires: rpm >= 4.11.0
@@ -215,6 +216,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Tue May 17 2022 Maxwell G <gotmax@e.email> - 218-1
+- Add `Requires: ansible-srpm-macros`
+
 * Tue Apr 19 2022 Tom Stellard <tstellar@redhat.com> - 217-1
 - Add -fno-openmp-implicit-rpath when building with clang
 
