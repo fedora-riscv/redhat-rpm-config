@@ -6,8 +6,8 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 183
-Release: 3%{?dist}
+Version: 184
+Release: 1%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -113,6 +113,7 @@ Requires: python-srpm-macros >= 3-46
 Requires: qt5-srpm-macros
 Requires: rust-srpm-macros
 Requires: rpmautospec-rpm-macros
+Requires: ansible-srpm-macros
 
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
@@ -216,6 +217,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Tue May 17 2022 Maxwell G <gotmax@e.email> - 184-1
+- Add `Requires: ansible-srpm-macros`
+
 * Sun Aug 15 2021 Michel Alexandre Salim <salimma@fedoraproject.org> - 183-3
 - Fix macros.build-constraints' %%limit_build
   - number of CPUs will never be set to less than 1
