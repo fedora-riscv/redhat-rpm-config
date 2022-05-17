@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 199
+Version: 200
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -108,6 +108,7 @@ Requires: python-srpm-macros >= 3.10-6
 Requires: qt5-srpm-macros
 Requires: rust-srpm-macros
 Requires: rpmautospec-rpm-macros
+Requires: ansible-srpm-macros
 
 Requires: rpm >= 4.11.0
 Requires: dwz >= 0.4
@@ -214,6 +215,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Tue May 17 2022 Maxwell G <gotmax@e.email> - 200-1
+- Add `Requires: ansible-srpm-macros`
+
 * Tue Sep 21 2021 Tom Stellard <tstellar@redhat.com> - 199-1
 - Drop annobin-plugin-clang dependency
 
