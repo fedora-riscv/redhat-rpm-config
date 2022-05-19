@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 200
+Version: 201
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -34,6 +34,7 @@ Source102: macros.mono-srpm
 Source103: macros.nodejs-srpm
 Source104: macros.ldc-srpm
 Source105: macros.valgrind-srpm
+Source106: macros.java-srpm
 
 # Other misc macros
 Source150: macros.build-constraints
@@ -215,6 +216,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Thu May 19 2022 Jason L Tibbitts III <j@tib.bs> - 201-1
+- Add java_arches macro.
+
 * Tue May 17 2022 Maxwell G <gotmax@e.email> - 200-1
 - Add `Requires: ansible-srpm-macros`
 
