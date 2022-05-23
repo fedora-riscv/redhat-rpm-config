@@ -64,15 +64,17 @@
 # the corresponding variable names.
 %build_fflags %{optflags} -I%{_fmoddir}
 
+# When clang is used as a linker driver, it does not auto-detect the LTO
+# bytecode and neither does bfd, so we need to explicitly pass the -flto
+# flag when linking.
+%_clang_extra_ldflags %{?_lto_cflags} -fno-openmp-implicit-rpath
+
 # Link editor flags.  This is usually called LDFLAGS in makefiles.
 # (Some makefiles use LFLAGS instead.)  The default value assumes that
 # the flags, while intended for ld, are still passed through the gcc
 # compiler driver.  At the beginning of %%build, the environment
 # variable RPM_LD_FLAGS to this value.
-# When clang is used as a linker driver, it does not auto-detect the LTO
-# bytecode and neither does bfd, so we need to explicitly pass the -flto
-# flag when linking.
-%build_ldflags -Wl,-z,relro %{_ld_as_needed_flags} %{_ld_symbols_flags} %{_hardened_ldflags} %{_annotation_ldflags} %[ "%{toolchain}" == "clang" ? "%{?_lto_cflags}" : "" ] %{_build_id_flags} %{?_package_note_flags}
+%build_ldflags -Wl,-z,relro %{_ld_as_needed_flags} %{_ld_symbols_flags} %{_hardened_ldflags} %{_annotation_ldflags} %[ "%{toolchain}" == "clang" ? "%{?_clang_extra_ldflags}" : "" ] %{_build_id_flags} %{?_package_note_flags}
 
 # Expands to shell code to set the compiler/linker environment
 # variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, LDFLAGS if they have
@@ -354,9 +356,7 @@ print(result)
 # If they are needed then add "%define _legacy_common_support 1" to the spec file.
 %_legacy_options	%{?_legacy_common_support: -fcommon}
 
-%_clang_extra_flags --start-no-unused-arguments -fno-openmp-implicit-rpath --end-no-unused-arguments
-
-%__global_compiler_flags %{_general_options} %{_warning_options} %{_preprocessor_defines} %{_hardened_cflags} %{_annotation_cflags} %{_legacy_options} %[ "%{toolchain}" == "clang" ? "%{_clang_extra_flags}" : "%{nil}" ]
+%__global_compiler_flags %{_general_options} %{_warning_options} %{_preprocessor_defines} %{_hardened_cflags} %{_annotation_cflags} %{_legacy_options}
 
 # Automatically trim changelog entries after 2 years
 %_changelog_trimage	%{expr:2*365*24*60*60}
