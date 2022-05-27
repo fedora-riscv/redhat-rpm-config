@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 220
+Version: 221
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -64,9 +64,9 @@ Source304: find-requires
 Source400: dist.sh
 Source404: gpgverify
 
-# 2016-10-02 snapshots from http://git.savannah.gnu.org/gitweb/?p=config.git
-Source500: config.guess
-Source501: config.sub
+# Snapshots from http://git.savannah.gnu.org/gitweb/?p=config.git
+Source500: https://git.savannah.gnu.org/cgit/config.git/plain/config.guess
+Source501: https://git.savannah.gnu.org/cgit/config.git/plain/config.sub
 
 # Dependency generators & their rules
 Source602: libsymlink.attr
@@ -217,6 +217,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Fri May 27 2022 Frederic Berat <fberat@redhat.com> - 221-1
+- update config.{guess,sub} to gnuconfig git HEAD
+
 * Fri May 27 2022 Tom Stellard <tstellar@redhat.com> - 220-1
 - Move -fno-openmp-implicit-rpath option from CFLAGS to LDFLAGS
 
