@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 201
+Version: 202
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -44,6 +44,7 @@ Source153: macros.forge
 Source154: macros.kmp
 Source155: macros.ldconfig
 Source156: macros.vpath
+Source157: macros.shell-completions
 
 # Build policy scripts
 # this comes from https://github.com/rpm-software-management/rpm/pull/344
@@ -195,6 +196,7 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.fedora-misc
 %{_rpmconfigdir}/macros.d/macros.forge
 %{_rpmconfigdir}/macros.d/macros.ldconfig
+%{_rpmconfigdir}/macros.d/macros.shell-completions
 %{_rpmconfigdir}/macros.d/macros.vpath
 %dir %{_rpmluadir}/fedora
 %dir %{_rpmluadir}/fedora/srpm
@@ -216,6 +218,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.kmp
 
 %changelog
+* Mon Aug 08 2022 Maxwell G <gotmax@e.email> - 202-1
+- Add macros.shell-completions
+
 * Thu May 19 2022 Jason L Tibbitts III <j@tib.bs> - 201-1
 - Add java_arches macro.
 
