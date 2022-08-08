@@ -6,7 +6,7 @@
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
-Version: 221
+Version: 222
 Release: 1%{?dist}
 # No version specified.
 License: GPL+
@@ -46,6 +46,7 @@ Source152: macros.fedora-misc
 Source153: macros.forge
 Source155: macros.ldconfig
 Source156: macros.vpath
+Source157: macros.shell-completions
 
 # Build policy scripts
 # this comes from https://github.com/rpm-software-management/rpm/pull/344
@@ -202,6 +203,7 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.fedora-misc
 %{_rpmconfigdir}/macros.d/macros.forge
 %{_rpmconfigdir}/macros.d/macros.ldconfig
+%{_rpmconfigdir}/macros.d/macros.shell-completions
 %{_rpmconfigdir}/macros.d/macros.vpath
 %dir %{_rpmluadir}/fedora
 %dir %{_rpmluadir}/fedora/srpm
@@ -217,6 +219,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Mon Aug 08 2022 Maxwell G <gotmax@e.email> - 222-1
+- Add macros.shell-completions
+
 * Fri May 27 2022 Frederic Berat <fberat@redhat.com> - 221-1
 - update config.{guess,sub} to gnuconfig git HEAD
 
