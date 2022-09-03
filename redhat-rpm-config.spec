@@ -228,7 +228,7 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 * Fri May 27 2022 Tom Stellard <tstellar@redhat.com> - 220-1
 - Move -fno-openmp-implicit-rpath option from CFLAGS to LDFLAGS
 
-* Tue May 17 2022 Miro Hrončok <mhroncok@redhat.com> - 219-2
+* Wed May 18 2022 Miro Hrončok <mhroncok@redhat.com> - 219-2
 - Remove a tab character from the definition of %%__global_compiler_flags
 - Fixes: rhbz#2083296
 
