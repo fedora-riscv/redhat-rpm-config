@@ -51,6 +51,60 @@
 %build_cpp %{__cpp}
 
 #==============================================================================
+
+# Use rpm --eval to run at shell script execution time.
+%_gcc_error_report_invoke \
+  rpm --eval '%%{lua:assert(loadfile([[/usr/lib/rpm/redhat/report-gcc-errors.lua]]))()}'
+
+# Script fragment to report GCC errors.  Does not exit the shell.
+%_gcc_error_report \
+  set +x \
+  if ! $_gcc_errors_found; then \
+    %{_gcc_error_report_invoke} \
+    if ! test -z "$(%_gcc_error_report_invoke)"; then \
+      _gcc_errors_found=true \
+    fi \
+  fi \
+  set -x \
+%{nil}
+
+# Install a trap script that runs the _gcc_errors_report script fragment.
+%_gcc_error_pre \
+  _gcc_errors_found=false \
+  _gcc_error_trap() { \
+    %{_gcc_error_report} \
+    if $_gcc_errors_found; then exit 1; fi \
+  } \
+  trap _gcc_error_trap 0 \
+%{nil}
+
+# In case the trap script hasn't run.
+%_gcc_error_post \
+    %{_gcc_error_report} \
+    if $_gcc_errors_found; then exit 1; fi \
+%{nil}
+
+%__spec_prep_pre \
+  %{___build_pre} \
+  %{_gcc_error_pre} \
+%{nil}
+%__spec_prep_post \
+  %{_gcc_error_post} \
+  %{___build_post} \
+%{nil}
+
+%__spec_build_post \
+  %{_gcc_error_post} \
+  %{___build_post} \
+%{nil}
+
+%__spec_check_post \
+  %{_gcc_error_post} \
+  %{___build_post} \
+%{nil}
+
+
+#==============================================================================
 # ---- compiler flags.
 
 # C compiler flags.  This is traditionally called CFLAGS in makefiles.
@@ -97,10 +151,12 @@
 # Use "%undefine _auto_set_build_flags" to disable"
 %_auto_set_build_flags 1
 %__spec_build_pre %{___build_pre} \
+  %{_gcc_error_pre} \
   %{?_auto_set_build_flags:%{set_build_flags}} \
   %{?_generate_package_note_file}
 
 %__spec_check_pre %{___build_pre} \
+  %{_gcc_error_pre} \
   %{?_auto_set_build_flags:%{set_build_flags}} \
   %{?_generate_package_note_file}
 
@@ -228,6 +284,7 @@ print(result)
 
 %__spec_install_pre %{___build_pre}\
     [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf "${RPM_BUILD_ROOT}"\
+    %{_gcc_error_pre} \
     mkdir -p "`dirname "$RPM_BUILD_ROOT"`"\
     mkdir "$RPM_BUILD_ROOT"\
     %{?_auto_set_build_flags:%{set_build_flags}}\
@@ -280,6 +337,7 @@ print(result)
     %{?__debug_package:%{__debug_install_post}}\
     %{__arch_install_post}\
     %{__os_install_post}\
+    %{_gcc_error_post}\
 %{nil}
 
 %install %{?_enable_debug_packages:%{?buildsubdir:%{debug_package}}}\
