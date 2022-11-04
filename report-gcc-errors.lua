@@ -1,5 +1,5 @@
 -- Support script for Fedora C99 port.  Grab logged errors from
--- /var/log/gcc-errors and report them (with some post-processing).
+-- /usr/lib/gcc/errors and report them (with some post-processing).
 
 -- List of functions which are permitted to be undeclared (because
 -- we do not implement them at all).
@@ -17,7 +17,7 @@ good = (function(list)
 end)(good)
 
 -- Compute full pathnames and order by modification time.
-local logdir = "/var/log/gcc-errors"
+local logdir = "/usr/lib/gcc/errors"
 files = {}
 for fname in assert(posix.files(logdir)) do
   if string.match(fname, "^gcc") then

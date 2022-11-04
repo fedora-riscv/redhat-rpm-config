@@ -9,7 +9,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.implicits.1%{?dist}
+Release: 1.implicits.3%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -174,7 +174,7 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 
 install -p -m 644 -t %{buildroot}%{rrcdir} report-gcc-errors.lua
 
-mkdir -p %{buildroot}/var/log/gcc-errors
+mkdir -p %{buildroot}/usr/lib/gcc/errors
 
 # This trigger is used to decide which version of the annobin plugin for gcc
 # should be used.  See comments in the script for full details.
@@ -225,7 +225,7 @@ mkdir -p %{buildroot}/var/log/gcc-errors
 %{rrcdir}/redhat-annobin-select-annobin-built-plugin
 
 %{rrcdir}/report-gcc-errors.lua
-%attr(1777,-,-) /var/log/gcc-errors
+%attr(1777,-,-) /usr/lib/gcc/errors
 
 %doc buildflags.md
 
