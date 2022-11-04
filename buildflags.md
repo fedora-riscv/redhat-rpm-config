@@ -6,7 +6,7 @@ and how to use them.
 # Using RPM build flags
 
 The %set_build_flags macro sets the environment variables `CFLAGS`,
-`CXXFLAGS`, `FFLAGS`, `FCFLAGS`, `LDFLAGS` and `LT_SYS_LIBRARY_PATH` to
+`CXXFLAGS`, `FFLAGS`, `FCFLAGS`, `VALAFLAGS`, `LDFLAGS` and `LT_SYS_LIBRARY_PATH` to
 the value of their corresponding rpm macros. `%set_build_flags` is automatically
 called prior to the `%build`, `%check`, and `%install` phases so these flags can be
 used by makefiles and other build tools.
@@ -43,6 +43,7 @@ Individual build flags are also available through RPM macros:
   the `CXXFLAGS` shell variable).
 * `%{build_fflags}` for `FFLAGS` (the Fortran compiler flags, also
   known as the `FCFLAGS` variable).
+* `%{build_valaflags}` for `VALAFLAGS` (the Vala compiler flags)
 * `%{build_ldflags}` for the linker (`ld`) flags, usually known as
   `LDFLAGS`. Note that the contents quote linker arguments using
   `-Wl`, so this variable is intended for use with the `gcc` compiler
@@ -492,6 +493,13 @@ tuning in the `gcc` package.  These settings are:
 * **x86_64**: `-mtune=generic` selects tuning which is expected to
    beneficial for a broad range of current CPUs.
 * **aarch64** does not have any architecture-specific tuning.
+
+### Vala-specific compiler flags
+
+ * `-g`: causes valac to emit `#line` directives in the generated C
+   source code. This improves backtrace generation by causing gdb to
+   point to Vala source file and line number instead of the generated C
+   source when possible.
 
 # Individual linker flags
 

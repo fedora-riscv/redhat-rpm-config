@@ -4,7 +4,7 @@
 # 2) When making changes, increment the version (in baserelease) by 1.
 #    rpmdev-bumpspec and other tools update the macro below, which is used
 #    in Version: to get the desired effect.
-%global baserelease 232
+%global baserelease 233
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
@@ -230,6 +230,9 @@ mkdir -p %{buildroot}/usr/lib/gcc/errors
 %doc buildflags.md
 
 %changelog
+* Fri Nov  4 2022 Florian Weimer <fweimer@redhat.com> - 233-1
+- Set -g when building Vala applications
+
 * Fri Sep 23 2022 Timm Bäder <tbaeder@redhat.com> - 232-1
 - Fix brp-compile-lto-elf to not rely on a backtracking regex
 

@@ -119,6 +119,9 @@
 # the corresponding variable names.
 %build_fflags %{optflags} -I%{_fmoddir}
 
+# Vala compiler flags. This is used to set VALAFLAGS.
+%build_valaflags -g
+
 # When clang is used as a linker driver, it does not auto-detect the LTO
 # bytecode and neither does bfd, so we need to explicitly pass the -flto
 # flag when linking.
@@ -132,8 +135,8 @@
 %build_ldflags -Wl,-z,relro %{_ld_as_needed_flags} %{_ld_symbols_flags} %{_hardened_ldflags} %{_annotation_ldflags} %[ "%{toolchain}" == "clang" ? "%{?_clang_extra_ldflags}" : "" ] %{_build_id_flags} %{?_package_note_flags}
 
 # Expands to shell code to set the compiler/linker environment
-# variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, LDFLAGS if they have
-# not been set already.  RPM_OPT_FLAGS and RPM_LD_FLAGS have already
+# variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, VALAFLAGS, LDFLAGS if they
+# have not been set already.  RPM_OPT_FLAGS and RPM_LD_FLAGS have already
 # been set implicitly at the start of the %%build section.
 # LT_SYS_LIBRARY_PATH is used by libtool script.
 %set_build_flags \
@@ -141,6 +144,7 @@
   CXXFLAGS="${CXXFLAGS:-%{build_cxxflags}}" ; export CXXFLAGS ; \
   FFLAGS="${FFLAGS:-%{build_fflags}}" ; export FFLAGS ; \
   FCFLAGS="${FCFLAGS:-%{build_fflags}}" ; export FCFLAGS ; \
+  VALAFLAGS="${VALAFLAGS:-%{build_valaflags}}" ; export VALAFLAGS ; \
   LDFLAGS="${LDFLAGS:-%{build_ldflags}}" ; export LDFLAGS ; \
   LT_SYS_LIBRARY_PATH="${LT_SYS_LIBRARY_PATH:-%_libdir:}" ; export LT_SYS_LIBRARY_PATH ; \
   CC="${CC:-%{__cc}}" ; export CC ; \
