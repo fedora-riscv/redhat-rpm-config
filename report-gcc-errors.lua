@@ -11,6 +11,7 @@ local good = {
   "QueryPerformanceFrequency",
   "SSLv2_client_method",
   "_NSGetEnviron",
+  "__builtin_available",
   "_alloca",
   "_controlfp",
   "_controlfp_s",
