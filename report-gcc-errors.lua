@@ -23,6 +23,7 @@ local good = {
   "_logb",
   "_rtc",
   "_strdup",
+  "_wstat64",
   "acl",
   "arc4random_push",
   "chflags",
@@ -68,6 +69,15 @@ end
 
 -- The Linux backend does not use these LFS variants.
 register_package_exception("zabbix", {"statfs64", "statvfs64"})
+
+-- This is used for _LARGEFILE64_SOURCE probing.  Common with TCL-related
+-- packages.
+register_package_exception("expect", {"stat64"})
+register_package_exception("itcl", {"stat64"})
+register_package_exception("itk", {"stat64"})
+register_package_exception("memchan", {"stat64"})
+register_package_exception("environment-modules", {"stat64"})
+register_package_exception("tcl", {"stat64"})
 
 -- Translate to associative array.
 good = (function(list)
