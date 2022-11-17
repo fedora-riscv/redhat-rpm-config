@@ -59,6 +59,16 @@ local good = {
   "sysctl",
 }
 
+local rpm_package_name = os.getenv("RPM_PACKAGE_NAME")
+local function register_package_exception(pkg, exceptions)
+  if pkg == rpm_package_name then
+    table.move(exceptions, 1, #exceptions, good, #good + 1)
+  end
+end
+
+-- The Linux backend does not use these LFS variants.
+register_package_exception("zabbix", {"statfs64", "statvfs64"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
