@@ -62,7 +62,7 @@ local good = {
 local rpm_package_name = os.getenv("RPM_PACKAGE_NAME")
 local function register_package_exception(pkg, exceptions)
   if pkg == rpm_package_name then
-    table.move(exceptions, 1, #exceptions, good, #good + 1)
+    table.move(exceptions, 1, #exceptions, #good + 1, good)
   end
 end
 
