@@ -32,6 +32,7 @@ local good = {
   "fpsetmask",
   "fseeko64",
   "gethrtime",
+  "getmntinfo",
   "htonll",
   "htonlll",
   "inconvlist",
@@ -78,6 +79,8 @@ register_package_exception("itk", {"stat64"})
 register_package_exception("memchan", {"stat64"})
 register_package_exception("environment-modules", {"stat64"})
 register_package_exception("tcl", {"stat64"})
+register_package_exception("tcl-mysqltcl", {"stat64"})
+register_package_exception("tcl-pgtcl", {"stat64"})
 
 -- Translate to associative array.
 good = (function(list)
