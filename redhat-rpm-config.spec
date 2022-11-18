@@ -9,7 +9,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.implicits.9%{?dist}
+Release: 1.implicits.10%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config

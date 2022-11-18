@@ -83,6 +83,7 @@ register_package_exception("tcl-mysqltcl", {"stat64"})
 register_package_exception("tcl-pgtcl", {"stat64"})
 register_package_exception("tcl-tcludp", {"stat64"})
 register_package_exception("tcl-tclvfs", {"stat64"})
+register_package_exception("tcl-tclxml", {"stat64"})
 
 -- Translate to associative array.
 good = (function(list)
