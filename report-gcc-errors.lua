@@ -90,6 +90,7 @@ register_package_exception("tcl-tktreectrl", {"stat64"})
 register_package_exception("tcl-togl", {"stat64"})
 register_package_exception("tcl-trf", {"stat64"})
 register_package_exception("tcl-zlib", {"stat64"})
+register_package_exception("tclx", {"stat64"})
 
 -- Translate to associative array.
 good = (function(list)
