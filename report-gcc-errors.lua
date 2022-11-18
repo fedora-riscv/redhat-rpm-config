@@ -81,6 +81,8 @@ register_package_exception("environment-modules", {"stat64"})
 register_package_exception("tcl", {"stat64"})
 register_package_exception("tcl-mysqltcl", {"stat64"})
 register_package_exception("tcl-pgtcl", {"stat64"})
+register_package_exception("tcl-tcludp", {"stat64"})
+register_package_exception("tcl-tclvfs", {"stat64"})
 
 -- Translate to associative array.
 good = (function(list)
