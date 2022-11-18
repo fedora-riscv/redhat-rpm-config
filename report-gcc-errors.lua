@@ -91,6 +91,11 @@ register_package_exception("tcl-togl", {"stat64"})
 register_package_exception("tcl-trf", {"stat64"})
 register_package_exception("tcl-zlib", {"stat64"})
 register_package_exception("tclx", {"stat64"})
+register_package_exception("tdom", {"stat64"})
+register_package_exception("tix", {"stat64"})
+register_package_exception("tkdnd", {"stat64"})
+register_package_exception("tkimg", {"stat64"})
+register_package_exception("tktray", {"stat64"})
 
 -- Translate to associative array.
 good = (function(list)
