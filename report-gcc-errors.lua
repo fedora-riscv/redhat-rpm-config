@@ -4,6 +4,7 @@
 -- List of functions which are permitted to be undeclared (because
 -- we do not implement them at all).
 local good = {
+  "IoctlSocket",
   "MIN",
   "MessageBox",
   "NSLookupAndBindSymbol",
