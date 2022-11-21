@@ -60,10 +60,12 @@
 %_gcc_error_report \
   set +x \
   if ! $_gcc_errors_found; then \
-    %{_gcc_error_report_invoke} \
     if ! test -z "$(%_gcc_error_report_invoke)"; then \
       _gcc_errors_found=true \
+      find -name config.log -print0 | \
+        xargs -0 bash -c 'echo "***$1 begin ***"; cat "$1"; echo "***$1 end ***"' ARG0 \
     fi \
+    %{_gcc_error_report_invoke} \
   fi \
   set -x \
 %{nil}
