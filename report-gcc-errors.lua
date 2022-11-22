@@ -23,6 +23,8 @@ local good = {
   "_isatty",
   "_logb",
   "_rtc",
+  "_scprintf",
+  "_snprintf",
   "_strdup",
   "_wstat64",
   "acl",
