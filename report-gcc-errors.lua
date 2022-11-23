@@ -61,10 +61,11 @@ local good = {
   "srand_deterministic",
   "statacl",
   "strlcat",
-  "strlcopy",
+  "strlcpy",
   "strtonum",
   "swapctl",
   "sysctl",
+  "sysctlbyname",
 }
 
 local rpm_package_name = os.getenv("RPM_PACKAGE_NAME")
