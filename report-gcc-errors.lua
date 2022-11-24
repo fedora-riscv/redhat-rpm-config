@@ -54,6 +54,7 @@ local good = {
   "pathfind",
   "pledge",
   "posix_close",
+  "pthread_set_name_np", -- Variant spelling of pthread_setname_np.
   "recallocarray",
   "res_ndestroy",
   "sendfilev",
