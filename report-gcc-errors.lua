@@ -104,6 +104,10 @@ register_package_exception("tkdnd", {"stat64"})
 register_package_exception("tkimg", {"stat64"})
 register_package_exception("tktray", {"stat64"})
 
+-- makedev is detected correctly, but the declaring <sys/sysmacros.h>
+-- header is not probed first.
+register_package_exception("tcpreplay", {"makedev"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
