@@ -109,6 +109,10 @@ register_package_exception("tktray", {"stat64"})
 -- header is not probed first.
 register_package_exception("tcpreplay", {"makedev"})
 
+-- MIN is detected correctly, but the declaring <sys/params.h>
+-- header is not probed first.
+register_package_exception("libprelude", {"MIN"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
