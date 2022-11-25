@@ -109,6 +109,9 @@ register_package_exception("tktray", {"stat64"})
 -- header is not probed first.
 register_package_exception("tcpreplay", {"makedev"})
 
+-- These curses functions are not actually implemented.
+register_package_exception("perl-Curses", {"flusok", "getcap", "touchoverlap"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
