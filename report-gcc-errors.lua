@@ -115,6 +115,10 @@ register_package_exception("tcpreplay", {"makedev"})
 -- These curses functions are not actually implemented.
 register_package_exception("perl-Curses", {"flusok", "getcap", "touchoverlap"})
 
+-- Linux sendfile is correctly detected.  The error comes from a
+-- FreeBSD-specific configure check.
+register_package_exception("pure-ftpd", {"sendfile"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
