@@ -119,6 +119,10 @@ register_package_exception("perl-Curses", {"flusok", "getcap", "touchoverlap"})
 -- FreeBSD-specific configure check.
 register_package_exception("pure-ftpd", {"sendfile"})
 
+-- The Fedora tor build does not use the system nacl package, so an
+-- error occurs during configure probing.
+register_package_exception("tor", {"crypto_scalarmult_curve25519"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
