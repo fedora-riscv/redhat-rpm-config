@@ -123,6 +123,27 @@ register_package_exception("pure-ftpd", {"sendfile"})
 -- error occurs during configure probing.
 register_package_exception("tor", {"crypto_scalarmult_curve25519"})
 
+-- These are not actually implemented (the ENGINE_load_* functions are
+-- not part of OpenSSL 3).  They are relevant to ruby for now.
+register_package_exception("ruby", {
+			      "ENGINE_load_4758cca",
+			      "ENGINE_load_aep",
+			      "ENGINE_load_atalla",
+			      "ENGINE_load_capi",
+			      "ENGINE_load_chil",
+			      "ENGINE_load_cswift",
+			      "ENGINE_load_gmp",
+			      "ENGINE_load_gost",
+			      "ENGINE_load_nuron",
+			      "ENGINE_load_padlock",
+			      "ENGINE_load_sureware",
+			      "ENGINE_load_ubsec",
+			      "freehostent",
+			      "getipnodebyname",
+			      "getpeerucred",
+			      "t_open",
+})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
