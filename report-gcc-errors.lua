@@ -33,6 +33,7 @@ local good = {
   "arc4random_push",
   "atomic_add_32",
   "chflags",
+  "closesocket",
   "directio",
   "fpclass",
   "fpsetmask",
