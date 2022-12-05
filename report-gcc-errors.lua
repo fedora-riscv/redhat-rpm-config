@@ -145,6 +145,11 @@ register_package_exception("ruby", {
 			      "t_open",
 })
 
+-- The autoconf-style logic probes incomplete header sets first, but
+-- it eventually selects <sys/sysctl.h> and <unistd.h> as the headers
+-- to include for these functions.
+register_package_exception("pcb-rnd", {"ioctl", "gethostname"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
