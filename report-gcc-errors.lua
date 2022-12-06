@@ -150,6 +150,17 @@ register_package_exception("ruby", {
 -- to include for these functions.
 register_package_exception("pcb-rnd", {"ioctl", "gethostname"})
 
+-- These functions are probed during the configure phase of the build.
+-- _GNU_SOURCE is automatically activated as needed.  The resulting
+-- config.h is the same.
+register_package_exception("mandoc", {
+			      "getprogname",
+			      "strcasestr",
+			      "strptime",
+			      "vasprintf",
+			      "wcwidth",
+})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
