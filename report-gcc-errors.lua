@@ -161,6 +161,12 @@ register_package_exception("mandoc", {
 			      "wcwidth",
 })
 
+-- The configure script uses wcwidth to probe for _GNU_SOURCE support.
+-- Note that an upstream patch (773f15d53348d417fe50d52cfe49f042df4a32ad)
+-- is still need to fix the build, but even with this patch, the probing
+-- tickles an implicit function declaration error.
+register_package_exception("nmh", {"wcwidth"})
+
 -- Translate to associative array.
 good = (function(list)
   local dict = {}
