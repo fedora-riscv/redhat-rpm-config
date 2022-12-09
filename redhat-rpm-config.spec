@@ -9,7 +9,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1%{?dist}
+Release: 1.rv64%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -221,6 +221,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Fri Dec 9 2022 Liu Yang <Yang.Liu.sn@gmail.com> - 228-1.rv64
+- Java, valgrind and nodejs has added for riscv64.
+
 * Mon Aug 8 2022 Maxwell G <gotmax@e.email> - 228-1
 - Add macros.shell-completions
 
