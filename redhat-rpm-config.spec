@@ -265,6 +265,12 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 * Tue Feb 14 2023 Frederic Berat <fberat@redhat.com> - 250-1
 - update config.{guess,sub} to gnuconfig git HEAD
 
+* Mon Feb 13 2023 David Abdurachmanov <davidlt@rivosinc.com> - 249-1.1.riscv64
+- Add riscv64 to gap supported arch list
+
+* Mon Feb 13 2023 David Abdurachmanov <davidlt@rivosinc.com> - 249-1.0.riscv64
+- Add riscv64 to nodejs supported arch list
+
 * Thu Feb 09 2023 Jerry James <loganjerry@gmail.com> - 249-1
 - Add macros.gap-srpm
 
