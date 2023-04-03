@@ -255,6 +255,13 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 * Wed Apr 05 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 252-1.rv64
 - Java, valgrind and nodejs has added for riscv64.
 
+* Mon Apr 03 2023 David Abdurachmanov <davidlt@rivosinc.com> - 252-1.1.riscv64
+- Set %%_clang_lto_cflags to %%{nil} on riscv64 to disable LTO with Clang
+
+* Wed Mar 15 2023 David Abdurachmanov <davidlt@rivosinc.com> - 252-1.0.riscv64
+- Add riscv64 to gap supported arch list
+- Add riscv64 to nodejs supported arch list
+
 * Tue Feb 28 2023 Tom Stellard <tstellar@redhat.com> - 252-1
 - Rename _pkg_extra_* macros to _distro_extra_*
 

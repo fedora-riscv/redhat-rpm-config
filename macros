@@ -363,7 +363,12 @@ print(result)
 # way we can detect installing an unusable .o/.a file.  This is on the TODO
 # list for F34.
 %_gcc_lto_cflags	-flto=auto -ffat-lto-objects
+%ifnarch riscv64
 %_clang_lto_cflags	-flto=thin
+%else
+# riscv64 does not have ld.gold support needed for LTO with Clang.
+%_clang_lto_cflags	%{nil}
+%endif
 %_lto_cflags		%{expand:%%{_%{toolchain}_lto_cflags}}
 
 # Default fortification level.
