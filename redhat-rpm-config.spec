@@ -4,7 +4,7 @@
 # 2) When making changes, increment the version (in baserelease) by 1.
 #    rpmdev-bumpspec and other tools update the macro below, which is used
 #    in Version: to get the desired effect.
-%global baserelease 228
+%global baserelease 252
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
@@ -40,6 +40,7 @@ Source103: macros.nodejs-srpm
 Source104: macros.ldc-srpm
 Source105: macros.valgrind-srpm
 Source106: macros.java-srpm
+Source107: macros.gap-srpm
 
 # Other misc macros
 Source150: macros.build-constraints
@@ -100,16 +101,16 @@ Requires: ocaml-srpm-macros
 Requires: openblas-srpm-macros
 Requires: perl-srpm-macros
 # ↓ Has Python BRPs originaly present in redhat-rpm-config
-Requires: python-srpm-macros >= 3.10-6
+Requires: python-srpm-macros >= 3.11-7
 Requires: qt5-srpm-macros
 Requires: rust-srpm-macros
 Requires: rpmautospec-rpm-macros
 Requires: package-notes-srpm-macros
+Requires: pyproject-srpm-macros
 
 %if ! 0%{?rhel}
 Requires: fpc-srpm-macros
 Requires: gnat-srpm-macros
-Requires: nim-srpm-macros
 Requires: ansible-srpm-macros
 %endif
 
@@ -172,16 +173,46 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 
 # This trigger is used to decide which version of the annobin plugin for gcc
 # should be used.  See comments in the script for full details.
+#
+# Note - whilst "gcc-plugin-annobin" requires "gcc" and hence in theory we
+# do not need to trigger on "gcc", the redhat-annobin-plugin-select.sh
+# script invokes gcc to determine the version of the gcc plugin, and this
+# can be significant.
+#
+# For example, suppose that version N of gcc is installed and that annobin
+# version A (built by gcc version N) is also installed.  Then a new version
+# of gcc is released.  If the rpms are updated in this order:
+#   gcc-plugin-annobin
+#   gcc
+# then when the trigger for gcc-plugin-annobin is run, the script will see
+# (the not yet updated) gcc is currently version N, which matches the current
+# annobin plugin A, so no changes are necessary.  Then gcc is updated and,
+# if the trigger below did not include "gcc", the script would not run again
+# and so now you would have an out of date version of the annobin plugin.
+#
+# Alternatively imagine installing gcc and annobin for the first time.
+# If the installation order is:
+#    gcc
+#    annobin-plugin-gcc
+#    gcc-plugin-annobin
+# then the installation of gcc will not cause the gcc-plugin-annobin to be
+# selected, since it does not exist yet.  Then annobin-plugin-gcc is installed
+# and since it is the only plugin, it will be selected.  Then
+# gcc-plugin-annobin is installed, and if the trigger below was not set to
+# run on gcc-plugin-annobin, it would pass unnoticed.
+#
+# Hence it is necessary to trigger on both gcc and gcc-plugin-annobin.
 
-%triggerin -- annobin-plugin-gcc gcc
+%triggerin -- annobin-plugin-gcc gcc-plugin-annobin gcc
 %{rrcdir}/redhat-annobin-plugin-select.sh
 %end
 
-# We also trigger when annobin is uninstalled.  This allows us to switch
-# over to the gcc generated version of the plugin.  It does not matter if
-# gcc is uninstalled, since if that happens the plugin cannot be used.
+# We also trigger when an annobin plugin is uninstalled.  This allows us to
+# switch over to the other version of the plugin.  Note - we do not bother
+# triggering on the uninstallation of "gcc", since if that is removed, the
+# plugins are rendered useless.
 
-%triggerpostun -- annobin-plugin-gcc
+%triggerpostun -- annobin-plugin-gcc gcc-plugin-annobin
 %{rrcdir}/redhat-annobin-plugin-select.sh
 %end
 
@@ -221,8 +252,86 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
-* Fri Dec 9 2022 Liu Yang <Yang.Liu.sn@gmail.com> - 228-1.rv64
+* Wed Apr 05 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 252-1.rv64
 - Java, valgrind and nodejs has added for riscv64.
+
+* Tue Feb 28 2023 Tom Stellard <tstellar@redhat.com> - 252-1
+- Rename _pkg_extra_* macros to _distro_extra_*
+
+* Thu Feb 23 2023 Miro Hrončok <mhroncok@redhat.com> - 251-1
+- Drop the requirement of orphaned nim-srpm-macros
+- No Fedora package uses the %%nim_arches macro
+
+* Tue Feb 14 2023 Frederic Berat <fberat@redhat.com> - 250-1
+- update config.{guess,sub} to gnuconfig git HEAD
+
+* Thu Feb 09 2023 Jerry James <loganjerry@gmail.com> - 249-1
+- Add macros.gap-srpm
+
+* Tue Feb 07 2023 Tom Stellard <tstellar@redhat.com> - 248-1
+- Add %%pkg_extra_* macros
+
+* Mon Feb 06 2023 Nick Clifton  <nickc@redhat.com> - 247-1
+- Fix triggers for the installation and removal of gcc-plugin-annobin.
+  Fixes: rhbz#2124562
+
+* Tue Jan 17 2023 Miro Hrončok <mhroncok@redhat.com> - 246-1
+- Add pyproject-srpm-macros to the default buildroot
+
+* Tue Jan 17 2023 Davide Cavalca <dcavalca@fedoraproject.org> - 245-1
+- Do not include frame pointers on ppc64le for now
+  Fixes: rhbz#2161595
+
+* Mon Jan 16 2023 Tom Stellard <tstellar@redhat.com> - 244-1
+- Make -flto=thin the default lto flag for clang
+
+* Mon Jan 16 2023 Siddhesh Poyarekar <siddhesh@redhat.com> - 243-1
+- Consolidate the _FORTIFY_SOURCE switches.
+
+* Fri Jan 13 2023 Miro Hrončok <mhroncok@redhat.com> - 242-1
+- Don't use %%[ ] expressions with %%{undefined}
+- Fixes: rhbz#2160716
+
+* Thu Jan 12 2023 Stephen Gallagher <sgallagh@redhat.com> - 241-1
+- Do not include frame pointers on RHEL
+
+* Tue Jan 10 2023 Davide Cavalca <dcavalca@fedoraproject.org> - 240-1
+- Do not include frame pointers on i686 and s390x for now
+
+* Wed Jan  4 2023 Davide Cavalca <dcavalca@fedoraproject.org> - 239-1
+- Enable frame pointers by default
+- Set arch specific flags for frame pointers support
+
+* Tue Jan  3 2023 Miro Hrončok <mhroncok@redhat.com> - 238-1
+- Set %%source_date_epoch_from_changelog to 1
+- https://fedoraproject.org/wiki/Changes/ReproducibleBuildsClampMtimes
+
+* Tue Jan  3 2023 Siddhesh Poyarekar <siddhesh@redhat.com> - 237-1
+- Make _FORTIFY_SOURCE configurable and bump default to 3.
+
+* Wed Dec 28 2022 Davide Cavalca <dcavalca@fedoraproject.org> - 236-1
+- Add conditional support for always including frame pointers
+
+* Sat Dec 10 2022 Florian Weimer <fweimer@redhat.com> - 235-1
+- Add %%_configure_use_runstatedir to disable --runstatedir configure option
+
+* Fri Nov  4 2022 Tom Stellard <tstellar@redhat.com> - 234-1
+- Remove unsupported arches from rpmrc
+
+* Fri Nov  4 2022 Florian Weimer <fweimer@redhat.com> - 233-1
+- Set -g when building Vala applications
+
+* Fri Sep 23 2022 Timm Bäder <tbaeder@redhat.com> - 232-1
+- Fix brp-compile-lto-elf to not rely on a backtracking regex
+
+* Thu Sep 08 2022 Maxwell G <gotmax@e.email> - 231-1
+- forge macros: Support Sourcehut. Fixes rhbz#2035935.
+
+* Tue Aug 30 2022 Frederic Berat <fberat@redhat.com> - 230-1
+- Add support for runstatedir in %%configure
+
+* Fri Aug 26 2022 Dan Horák <dan[at]danny.cz> - 229-1
+- Move the baseline s390x arch to z13 for F-38+
 
 * Mon Aug 8 2022 Maxwell G <gotmax@e.email> - 228-1
 - Add macros.shell-completions

@@ -12,6 +12,7 @@
 #      from the defaults.
 #
 %_localstatedir		/var
+%_runstatedir		/run
 
 %_pkgdocdir             %{_docdir}/%{name}
 %_docdir_fmt            %%{NAME}
@@ -19,6 +20,7 @@
 %_fmoddir		%{_libdir}/gfortran/modules
 
 %source_date_epoch_from_changelog 1
+%clamp_mtime_to_source_date_epoch %source_date_epoch_from_changelog
 
 %_enable_debug_packages 1
 %_include_minidebuginfo 1
@@ -55,14 +57,17 @@
 # C compiler flags.  This is traditionally called CFLAGS in makefiles.
 # Historically also available as %%{optflags}, and %%build sets the
 # environment variable RPM_OPT_FLAGS to this value.
-%build_cflags %{optflags}
+%build_cflags %{optflags} %{?_distro_extra_cflags}
 
 # C++ compiler flags.  This is traditionally called CXXFLAGS in makefiles.
-%build_cxxflags %{optflags}
+%build_cxxflags %{optflags} %{?_distro_extra_cxxflags}
 
 # Fortran compiler flags.  Makefiles use both FFLAGS and FCFLAGS as
 # the corresponding variable names.
-%build_fflags %{optflags} -I%{_fmoddir}
+%build_fflags %{optflags} -I%{_fmoddir} %{?_distro_extra_fflags}
+
+# Vala compiler flags. This is used to set VALAFLAGS.
+%build_valaflags -g
 
 # When clang is used as a linker driver, it does not auto-detect the LTO
 # bytecode and neither does bfd, so we need to explicitly pass the -flto
@@ -74,11 +79,11 @@
 # the flags, while intended for ld, are still passed through the gcc
 # compiler driver.  At the beginning of %%build, the environment
 # variable RPM_LD_FLAGS to this value.
-%build_ldflags -Wl,-z,relro %{_ld_as_needed_flags} %{_ld_symbols_flags} %{_hardened_ldflags} %{_annotation_ldflags} %[ "%{toolchain}" == "clang" ? "%{?_clang_extra_ldflags}" : "" ] %{_build_id_flags} %{?_package_note_flags}
+%build_ldflags -Wl,-z,relro %{_ld_as_needed_flags} %{_ld_symbols_flags} %{_hardened_ldflags} %{_annotation_ldflags} %[ "%{toolchain}" == "clang" ? "%{?_clang_extra_ldflags}" : "" ] %{_build_id_flags} %{?_package_note_flags} %{?_distro_extra_ldflags}
 
 # Expands to shell code to set the compiler/linker environment
-# variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, LDFLAGS if they have
-# not been set already.  RPM_OPT_FLAGS and RPM_LD_FLAGS have already
+# variables CFLAGS, CXXFLAGS, FFLAGS, FCFLAGS, VALAFLAGS, LDFLAGS if they
+# have not been set already.  RPM_OPT_FLAGS and RPM_LD_FLAGS have already
 # been set implicitly at the start of the %%build section.
 # LT_SYS_LIBRARY_PATH is used by libtool script.
 %set_build_flags \
@@ -86,6 +91,7 @@
   CXXFLAGS="${CXXFLAGS:-%{build_cxxflags}}" ; export CXXFLAGS ; \
   FFLAGS="${FFLAGS:-%{build_fflags}}" ; export FFLAGS ; \
   FCFLAGS="${FCFLAGS:-%{build_fflags}}" ; export FCFLAGS ; \
+  VALAFLAGS="${VALAFLAGS:-%{build_valaflags}}" ; export VALAFLAGS ; \
   LDFLAGS="${LDFLAGS:-%{build_ldflags}}" ; export LDFLAGS ; \
   LT_SYS_LIBRARY_PATH="${LT_SYS_LIBRARY_PATH:-%_libdir:}" ; export LT_SYS_LIBRARY_PATH ; \
   CC="${CC:-%{__cc}}" ; export CC ; \
@@ -134,7 +140,7 @@ print(result)
 %__cflags_arch_x86_64 %[0%{?rhel} >= 9 ? "-march=x86-64-v2" : ""]
 
 # Also used for s390.
-%__cflags_arch_s390x %[0%{?rhel} >= 9 ? "-march=z14 -mtune=z15" : "-march=zEC12 -mtune=z13"]
+%__cflags_arch_s390x %[0%{?rhel} >= 9 ? "-march=z14 -mtune=z15" : "-march=z13 -mtune=z14"]
 
 %__cflags_arch_ppc64le %[0%{?rhel} >= 9 ? "-mcpu=power9 -mtune=power9" : "-mcpu=power8 -mtune=power8"]
 
@@ -148,6 +154,9 @@ print(result)
 # Eventually we'll want to turn this on by default, but this gives packagers a
 # way to turn it back off.
 # %_configure_disable_silent_rules 1
+
+# Pass --runstatedir to configure.
+%_configure_use_runstatedir 1
 
 # This fixes various easy resolved configure tests that are compromised by LTO.
 #
@@ -212,6 +221,7 @@ print(result)
 	--libdir=%{_libdir} \\\
 	--libexecdir=%{_libexecdir} \\\
 	--localstatedir=%{_localstatedir} \\\
+	%{?_configure_use_runstatedir:$(grep -q "runstatedir=DIR" %{_configure} && echo '--runstatedir=%{_runstatedir}')} \\\
 	--sharedstatedir=%{_sharedstatedir} \\\
 	--mandir=%{_mandir} \\\
 	--infodir=%{_infodir}
@@ -324,6 +334,15 @@ print(result)
 # to move the annobin notes into the separate debuginfo file.
 %_find_debuginfo_extra_opts %{?_annotated_build:--remove-section .gnu.build.attributes}
 
+# Include frame pointer information by default, except on RHEL
+# https://fedoraproject.org/wiki/Changes/fno-omit-frame-pointer
+# Use "%undefine _include_frame_pointers" to disable.
+%_include_frame_pointers %{undefined rhel}
+%_frame_pointers_cflags %{expr:0%{?_include_frame_pointers} ? "-fno-omit-frame-pointer" : ""}
+%_frame_pointers_cflags_x86_64 %{expr:0%{?_include_frame_pointers} ? "-mno-omit-leaf-frame-pointer" : ""}
+%_frame_pointers_cflags_aarch64 %{expr:0%{?_include_frame_pointers} ? "-mno-omit-leaf-frame-pointer" : ""}
+%_frame_pointers_cflags_s390x %{expr:0%{?_include_frame_pointers} ? "-mbackchain" : ""}
+
 # Fail linking if there are undefined symbols.  Required for proper
 # ELF symbol versioning support.  Disabled by default.
 # Use "%define _ld_strict_symbol_defs 1" to enable.
@@ -344,8 +363,17 @@ print(result)
 # way we can detect installing an unusable .o/.a file.  This is on the TODO
 # list for F34.
 %_gcc_lto_cflags	-flto=auto -ffat-lto-objects
-%_clang_lto_cflags	-flto
+%_clang_lto_cflags	-flto=thin
 %_lto_cflags		%{expand:%%{_%{toolchain}_lto_cflags}}
+
+# Default fortification level.
+#   "%define _fortify_level 2" to downgrade and
+#   "%define _fortify_level 0" or "%undefine _fortify_level" to disable
+#
+# We use a single -Wp here to enforce order so that ccache does not ever
+# reorder them.
+%_fortify_level		3
+%_fortify_level_flags	%[ 0%{?_fortify_level} > 0 ? "-Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=%{_fortify_level}" : "" ]
 
 # Some linkers default to a build-id algoritim that is not supported by rpmbuild,
 # so we need to specify the right algorithm to use.
@@ -353,7 +381,7 @@ print(result)
 
 %_general_options       -O2 %{?_lto_cflags} -fexceptions -g -grecord-gcc-switches -pipe
 %_warning_options       -Wall -Werror=format-security
-%_preprocessor_defines  -Wp,-D_FORTIFY_SOURCE=2 -Wp,-D_GLIBCXX_ASSERTIONS
+%_preprocessor_defines  %{_fortify_level_flags} -Wp,-D_GLIBCXX_ASSERTIONS
 
 # Common variables are no longer generated by default by gcc and clang
 # If they are needed then add "%define _legacy_common_support 1" to the spec file.

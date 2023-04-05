@@ -42,7 +42,10 @@ local function checkforgeurl(url, id, silent)
       description = 'https://code.googlesource.com/…/repo'},
     ["bitbucket.org"] = {
       pattern     = 'https://[^/]+/[^/]+/[^/#?]+',
-      description = 'https://bitbucket.org/owner/repo'}}
+      description = 'https://bitbucket.org/owner/repo'},
+    sourcehut = {
+      pattern     = 'https://[^/]+/~[^/]+/[^/#?]+',
+      description = 'https://git.sr.ht/~owner/repo'}}
   if (urlpatterns[id] ~= nil) then
     checkedurl = string.match(url,urlpatterns[id]["pattern"])
     if (checkedurl == nil) then
@@ -81,6 +84,8 @@ local function idforge(url, silent)
         forge = "gitlab"
       elseif (string.match(forge, "^github[%.-]") or string.match(forge, "[%.-]github[%.]")) then
         forge = "github"
+        elseif  string.match(url, "[^:]+://git.sr.ht/") then
+        forge = "sourcehut"
       end
       forgeurl, forge = checkforgeurl(url, forge, silent)
     end
@@ -150,7 +155,12 @@ local function meta(suffix, verbose, informative, silent)
       shortcommit = '%{lua:print(string.sub(rpm.expand("%{commit'     .. suffix .. '}"), 1, 12))}',
       owner       = '%{lua:print(string.match(rpm.expand("%{forgeurl' .. suffix .. '}"), "^[^:]+://[^/]+/([^/?#]+)"))}',
       archivename = "%{owner"        .. suffix .. "}-%{repo"          .. suffix .. "}-%{shortcommit" .. suffix .. "}",
-      archiveurl  = "%{forgeurl"     .. suffix .. "}/get/%{ref"       .. suffix .. "}.%{archiveext"  .. suffix .. "}" } }
+      archiveurl  = "%{forgeurl"     .. suffix .. "}/get/%{ref"       .. suffix .. "}.%{archiveext"  .. suffix .. "}" }, 
+    sourcehut = {
+      archiveext  = "tar.gz",
+      archivename = "%{repo"         .. suffix .. "}-%{fileref"       .. suffix .. "}",
+      archiveurl = "%{forgeurl"      .. suffix .. "}/archive/%{ref"   .. suffix .. "}.%{archiveext"  .. suffix .. "}",
+      topdir     = "%{repo"          .. suffix .. "}-%{ref"           .. suffix .. "}" } }
   -- Packaging a moving branch is quite a bad idea, but since at least Gitlab
   -- will treat branches and tags the same way better support branches explicitly
   -- than have packagers hijack %{tag} to download branch states
@@ -212,6 +222,15 @@ local function meta(suffix, verbose, informative, silent)
       if (spec["commit"] == "") then
         rpm.expand("%{error:All BitBucket URLs require commit value knowledge: you need to define %{commit}!}")
       end
+    elseif (forge == "sourcehut") then
+      local fileref = ref
+      if (fileref ~= "%{?commit" .. suffix .. "}") and
+             string.match(rpm.expand(fileref), "^v[%d]") then
+        fileref = string.gsub(rpm.expand(fileref), "^v", "")
+      elseif (string.match(rpm.expand(fileref), "/")) then
+        fileref = string.gsub(rpm.expand(fileref), "/", "-")
+      end
+      fedora.safeset("fileref" .. suffix, fileref, verbose)
     end
     fedora.safeset("ref" .. suffix, ref, verbose)
     -- Mass setting of the remaining variables

@@ -6,7 +6,7 @@ and how to use them.
 # Using RPM build flags
 
 The %set_build_flags macro sets the environment variables `CFLAGS`,
-`CXXFLAGS`, `FFLAGS`, `FCFLAGS`, `LDFLAGS` and `LT_SYS_LIBRARY_PATH` to
+`CXXFLAGS`, `FFLAGS`, `FCFLAGS`, `VALAFLAGS`, `LDFLAGS` and `LT_SYS_LIBRARY_PATH` to
 the value of their corresponding rpm macros. `%set_build_flags` is automatically
 called prior to the `%build`, `%check`, and `%install` phases so these flags can be
 used by makefiles and other build tools.
@@ -43,6 +43,7 @@ Individual build flags are also available through RPM macros:
   the `CXXFLAGS` shell variable).
 * `%{build_fflags}` for `FFLAGS` (the Fortran compiler flags, also
   known as the `FCFLAGS` variable).
+* `%{build_valaflags}` for `VALAFLAGS` (the Vala compiler flags)
 * `%{build_ldflags}` for the linker (`ld`) flags, usually known as
   `LDFLAGS`. Note that the contents quote linker arguments using
   `-Wl`, so this variable is intended for use with the `gcc` compiler
@@ -123,6 +124,16 @@ are set as well during libtool-.  This can be switched off using:
 
 Further patching happens in LTO mode, see below.
 
+### Other autotools compatibility settings
+
+During `%configure`, `--runstatedir` is automatically passed to the
+`configure` script if support for this option is detected.  This
+detection can fail if the package has multiple `configure` scripts
+that invoke each other, and only some of them support `--runstatedir`.
+To disable passing `--runstatedir`, use:
+
+    %undefine _configure_use_runstatedir
+
 ### Disabling Link-Time Optimization
 
 By default, builds use link-time optimization.  In this build mode,
@@ -160,6 +171,30 @@ this, include this in the RPM spec file:
 This turns off certain hardening features, as described in detail
 below.  The main difference is that executables will be
 position-dependent (no full ASLR) and use lazy binding.
+
+### Source Fortification
+
+By default, the build flags include `-Wp,-D_FORTIFY_SOURCE=3`: Source
+fortification activates various hardening features in glibc:
+
+* String functions such as `memcpy` attempt to detect buffer lengths
+  and terminate the process if a buffer overflow is detected.
+* `printf` format strings may only contain the `%n` format specifier
+  if the format string resides in read-only memory.
+* `open` and `openat` flags are checked for consistency with the
+  presence of a *mode* argument.
+* Plus other minor hardening changes.
+
+These changes can, on rare occasions, break valid programs. The source
+fortification level can be overridden by adding this in the RPM spec file:
+
+    %define _fortify_level 2
+
+to reduce source fortification level to 2 or:
+
+    %undefine _fortify_level
+
+to disable fortification altogether.
 
 ### Annotated builds/watermarking
 
@@ -267,6 +302,17 @@ will be used to generate `%_package_note_file`. If `%_package_note_flags`
 is undefined, the linker argument that injects the script will not be added
 to `%build_ldfags`, but the linker script would still be generated.
 
+### Frame pointers
+
+Frame pointers will be included by default via the `%_include_frame_pointers`
+macro. To opt out, the best way is to undefine the macro. Include this in the
+spec file:
+
+    %undefine _include_frame_pointers
+
+Note that opting out might still result in frame pointers being included on
+architectures where they are part of the ABI (e.g. aarch64) depending on
+compiler defaults.
 
 ### Post-build ELF object processing
 
@@ -362,16 +408,9 @@ The general (architecture-independent) build flags are:
   This can occasionally result in compilation errors. In that case,
   the best option is to rewrite the source code so that only constant
   format strings (string literals) are used.
-* `-Wp,-D_FORTIFY_SOURCE=2`: Source fortification activates various
-  hardening features in glibc:
-    * String functions such as `memcpy` attempt to detect buffer lengths
-      and terminate the process if a buffer overflow is detected.
-    * `printf` format strings may only contain the `%n` format specifier
-      if the format string resides in read-only memory.
-    * `open` and `openat` flags are checked for consistency with the
-      presence of a *mode* argument.
-    * Plus other minor hardening changes.
-  (These changes can occasionally break valid programs.)
+* `-U_FORTIFY_SOURCE, -Wp,-U_FORTIFY_SOURCE -Wp,-D_FORTIFY_SOURCE=3`:
+  See the Source Fortification section above and the `%_fortify_level`
+  override.
 * `-fexceptions`: Provide exception unwinding support for C programs.
   See the [`-fexceptions` option in the GCC
   manual](https://gcc.gnu.org/onlinedocs/gcc/Code-Gen-Options.html#index-fexceptions)
@@ -450,6 +489,12 @@ by undefining the `%_annotated_build` RPM macro (see above).  Binary
 watermarks are currently disabled on armhpf, and with the `clang`
 toolchain.
 
+If frame pointers are enabled by default (via `%_include_frame_pointers`),
+the `-fno-omit-frame-pointer` will be added on all architectures except i686
+and s390x. Additional flags will be added on specific architectures:
+
+* `-mno-omit-leaf-frame-pointer` on x86_64 and aarch64
+
 ### Architecture-specific compiler flags
 
 These compiler flags are enabled for all builds (hardened/annotated or
@@ -492,6 +537,13 @@ tuning in the `gcc` package.  These settings are:
 * **x86_64**: `-mtune=generic` selects tuning which is expected to
    beneficial for a broad range of current CPUs.
 * **aarch64** does not have any architecture-specific tuning.
+
+### Vala-specific compiler flags
+
+ * `-g`: causes valac to emit `#line` directives in the generated C
+   source code. This improves backtrace generation by causing gdb to
+   point to Vala source file and line number instead of the generated C
+   source when possible.
 
 # Individual linker flags
 

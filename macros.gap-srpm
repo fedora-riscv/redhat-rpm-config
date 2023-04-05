@@ -1,0 +1,2 @@
+# Arches that GAP runs on
+%gap_arches aarch64 ppc64le s390x x86_64
