@@ -9,7 +9,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.rv64%{?dist}
+Release: 1.rv64.2%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -252,6 +252,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Tue Aug 22 2023 Songsong Zhang <U2FsdGVkX1@gmail.com> - 252-1.rv64.2
+- Add riscv64 support for ldc and mono
+
 * Wed Apr 05 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 252-1.rv64
 - Java, valgrind and nodejs has added for riscv64.
 
