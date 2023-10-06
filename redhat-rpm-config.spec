@@ -4,7 +4,7 @@
 # 2) When making changes, increment the version (in baserelease) by 1.
 #    rpmdev-bumpspec and other tools update the macro below, which is used
 #    in Version: to get the desired effect.
-%global baserelease 263
+%global baserelease 264
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
@@ -255,6 +255,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Fri Oct  6 2023 Arjun Shankar <arjun@redhat.com> - 264-1
+- Use correct format specifier in brp-llvm-compile-lto-elf
+
 * Fri Oct  6 2023 Arjun Shankar <arjun@redhat.com> - 263-1
 - Fix brp-llvm-compile-lto-elf parallelism with hardlinks (#2234024)
 
