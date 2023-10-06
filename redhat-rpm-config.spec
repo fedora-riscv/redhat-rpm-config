@@ -4,7 +4,7 @@
 # 2) When making changes, increment the version (in baserelease) by 1.
 #    rpmdev-bumpspec and other tools update the macro below, which is used
 #    in Version: to get the desired effect.
-%global baserelease 262
+%global baserelease 263
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
@@ -131,6 +131,7 @@ Requires: %{_bindir}/xargs
 
 # for brp-llvm-compile-lto-elf
 Requires: (llvm if clang)
+Requires: (gawk if clang)
 
 # -fstack-clash-protection and -fcf-protection require GCC 8.
 Conflicts: gcc < 8.0.1-0.22
@@ -254,6 +255,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Fri Oct  6 2023 Arjun Shankar <arjun@redhat.com> - 263-1
+- Fix brp-llvm-compile-lto-elf parallelism with hardlinks (#2234024)
+
 * Wed Aug 02 2023 Charalampos Stratakis <cstratak@redhat.com> - 262-1
 - Strip all extension builder flags except -fexceptions and -fcf-protection
 - https://fedoraproject.org/wiki/Changes/Python_Extension_Flags_Reduction
