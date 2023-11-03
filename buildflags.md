@@ -36,9 +36,7 @@ Individual build flags are also available through RPM macros:
 * `%{build_cxx}` for the command name of the C++ compiler.
 * `%{build_cpp}` for the command name of the C-compatible preprocessor.
 * `%{build_cflags}` for the C compiler flags (also known as the
-  `CFLAGS` variable). Also historically available as `%{optflags}`.
-  Furthermore, at the start of the `%build` section, the environment
-  variable `RPM_OPT_FLAGS` is set to this value.
+  `CFLAGS` variable).
 * `%{build_cxxflags}` for the C++ compiler flags (usually assigned to
   the `CXXFLAGS` shell variable).
 * `%{build_fflags}` for `FFLAGS` (the Fortran compiler flags, also
@@ -49,6 +47,13 @@ Individual build flags are also available through RPM macros:
   `-Wl`, so this variable is intended for use with the `gcc` compiler
   driver. At the start of the `%build` section, the environment
   variable `RPM_LD_FLAGS` is set to this value.
+
+The C and C++ compiler flags are historically available as the
+`%{optflags}` macro.  These flags may not contain flags that work with
+certain languagues or compiler front ends, so the language-specific
+`%build_*` are more precise.  At the start of the `%build` section,
+the environment variable `RPM_OPT_FLAGS` is set to the `%{optflags}`
+value; similar limitations apply.
 
 The variable `LT_SYS_LIBRARY_PATH` is defined here to prevent the `libtool`
 script (v2.4.6+) from hardcoding `%_libdir` into the binaries' `RPATH`.
@@ -108,6 +113,55 @@ or:
     %if "%{toolchain}" == "clang"
     BuildRequires: clang compiler-rt
     %endif
+
+### Controlling Type Safety
+
+The macro `%build_type_safety_c` can be set to change the C type
+safety level.  By default (value 0), all C constructs that GCC accepts
+for backwards compatibility with obsolete language standards are
+accepted during package builds.  Packages can set
+`%build_type_safety_c` to higher values to adopt future
+distribution-wide type-safety increases early.
+
+When changing the `%build_type_safety_c` level to increase it, spec
+file should use a construct like this to avoid *lowering* a future
+default:
+
+```
+%if %build_type_safety_c < 2
+%global %build_type_safety_c 2
+%endif
+```
+
+At level 1, the following additional error categories are enabled:
+
+* `-Werror=implicit-int`: Reject declarations and definitions that
+  omit a type name where one is required.  Examples are:
+  `extern int_variable;`, `extern int_returning_function (void);`,
+  and missing separate parameter type declarations in old-style
+  function definitions.
+* `-Werror=implicit-function-declaration`: Reject calls to functions
+  to undeclared functions such as `function_not_defined_anywhere ()`.
+  Previously, such expressions where we compiled as if a declaration
+  `extern int function_not_defined_anywhere ();` (a prototype-less
+  function declaration) were in scope.
+
+At level 2, the following error category is enabled in addition:
+
+* `-Werror=int-conversion`: Reject the use of integer expressions
+  where a pointer type expected, and pointer expressions where an
+  integer type is expected.  Without this option, GCC may produce an
+  executable, but often, there are failures at run time because not
+  the full 64 bits of pointers are preserved.
+
+The additional level 3 error category is:
+
+* `-Werror=incompatible-pointer-types`: An expression of one pointer
+  type is used where different pointer type is expected.  (This does
+  not cover signed/unsigned mismatches in the pointer target type.)
+
+Clang errors out on more obsolete and invalid C constructs than C, so
+the type safety is higher by default than with the GCC toolchain.
 
 ### Disable autotools compatibility patching
 
@@ -402,12 +456,16 @@ The general (architecture-independent) build flags are:
   compilation performance.  (This does not affect code generation.)
 * `-Wall`: Turn on various GCC warnings.
   See the [GCC manual](https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wall).
+* `-Wno-complain-wrong-lang`: Do not warn about front end mismatches
+  (e.g, using `-Werror=format-security` with Fortran).  Only included
+  in `%optflags`, and not the front-end-specific `%build_*` macros.
 * `-Werror=format-security`: Turn on format string warnings and treat
   them as errors.
   See the [GCC manual](https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wformat-security).
   This can occasionally result in compilation errors. In that case,
   the best option is to rewrite the source code so that only constant
   format strings (string literals) are used.
+* Other `-Werror=` options.  See **Controlling C Type Safety**.
 * `-U_FORTIFY_SOURCE, -Wp,-U_FORTIFY_SOURCE -Wp,-D_FORTIFY_SOURCE=3`:
   See the Source Fortification section above and the `%_fortify_level`
   override.
@@ -602,16 +660,11 @@ with such toolchains.
 The macros `%{extension_cflags}`, `%{extension_cxxflags}`,
 `%{extension_fflags}`, `%{extension_ldflags}` contain a subset of
 flags that have been adjusted for compatibility with alternative
-toolchains, while still preserving some of the compile-time security
-hardening that the standard Fedora build flags provide.
+toolchains.
 
-The current set of differences are:
-
-* No GCC plugins (such as annobin) are activated.
-* No GCC spec files (`-specs=` arguments) are used.
-
-Additional flags may be removed in the future if they prove to be
-incompatible with alternative toolchains.
+Currently the -fexceptions and -fcf-protection flags are preserved
+for binary compatibility with the languages the extensions are
+built against.
 
 Extension builders should detect whether they are performing a regular
 RPM build (e.g., by looking for an `RPM_OPT_FLAGS` variable).  In this

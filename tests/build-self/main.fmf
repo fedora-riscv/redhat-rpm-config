@@ -2,5 +2,6 @@ summary: self-build test
 
 require:
   - dnf-plugins-core
+  - dnf5-plugins
   - rpm-build
 test: ./runtest.sh

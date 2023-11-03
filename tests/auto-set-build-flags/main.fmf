@@ -4,6 +4,7 @@ summary: >
 
 require:
   - annobin-annocheck
+  - dnf5-plugins
   - gcc
   - gcc-c++
   - make

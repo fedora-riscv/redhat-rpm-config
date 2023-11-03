@@ -4,12 +4,12 @@
 # 2) When making changes, increment the version (in baserelease) by 1.
 #    rpmdev-bumpspec and other tools update the macro below, which is used
 #    in Version: to get the desired effect.
-%global baserelease 252
+%global baserelease 264
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.rv64.2%{?dist}
+Release: 1.rv64%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -103,7 +103,9 @@ Requires: perl-srpm-macros
 # ↓ Has Python BRPs originaly present in redhat-rpm-config
 Requires: python-srpm-macros >= 3.11-7
 Requires: qt5-srpm-macros
-Requires: rust-srpm-macros
+Requires: qt6-srpm-macros
+# rust-srpm-macros v24 contains %%build_rustflags defintion
+Requires: rust-srpm-macros >= 24
 Requires: rpmautospec-rpm-macros
 Requires: package-notes-srpm-macros
 Requires: pyproject-srpm-macros
@@ -129,6 +131,7 @@ Requires: %{_bindir}/xargs
 
 # for brp-llvm-compile-lto-elf
 Requires: (llvm if clang)
+Requires: (gawk if clang)
 
 # -fstack-clash-protection and -fcf-protection require GCC 8.
 Conflicts: gcc < 8.0.1-0.22
@@ -252,6 +255,47 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Fri Oct 3 2023 Zhengyu He <hezhy472013@gmail.com> - 264-1.rv64
+- Merge from upstream
+
+* Fri Oct  6 2023 Arjun Shankar <arjun@redhat.com> - 264-1
+- Use correct format specifier in brp-llvm-compile-lto-elf
+
+* Fri Oct  6 2023 Arjun Shankar <arjun@redhat.com> - 263-1
+- Fix brp-llvm-compile-lto-elf parallelism with hardlinks (#2234024)
+
+* Wed Aug 02 2023 Charalampos Stratakis <cstratak@redhat.com> - 262-1
+- Strip all extension builder flags except -fexceptions and -fcf-protection
+- https://fedoraproject.org/wiki/Changes/Python_Extension_Flags_Reduction
+
+* Fri Jul  7 2023 Florian Weimer <fweimer@redhat.com> - 261-1
+- Fix warnings that appear during the build of the llvm package
+
+* Wed Jul  5 2023 Florian Weimer <fweimer@redhat.com> - 260-1
+- Implement the %%build_type_safety_c macro (#2218019)
+
+* Wed Jul  5 2023 Florian Weimer <fweimer@redhat.com> - 259-1
+- Filter out C, C++ build flags from Fortran build flags (#2177253)
+
+* Wed Jul  5 2023 Florian Weimer <fweimer@redhat.com> - 258-1
+- Enable PIC mode for assembler files (#2167430)
+
+* Wed Jul 05 2023 Frederic Berat <fberat@redhat.com> - 257-1
+- update config.{guess,sub} to gnuconfig git HEAD
+
+* Sat Jun 17 2023 Tom Stellard <tstellar@redhat.com> - 256-1
+- Remove -fno-openmp-implicit-rpath from clang ldflags
+
+* Fri Jun 16 2023 Lumír Balhar <lbalhar@redhat.com> - 255-1
+- Add qt6-srpm-macros
+
+* Thu Mar  9 2023 Florian Weimer <fweimer@redhat.com> - 254-1
+- Switch ELN to x86-64-v3
+
+* Tue Feb 28 2023 Maxwell G <gotmax@e.email> - 253-1
+- Include RUSTFLAGS in %%set_build_flags
+- Fixes: rhbz#2167183
+
 * Tue Aug 22 2023 Songsong Zhang <U2FsdGVkX1@gmail.com> - 252-1.rv64.2
 - Add riscv64 support for ldc and mono
 

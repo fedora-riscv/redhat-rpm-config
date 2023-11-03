@@ -18,7 +18,9 @@ Source0: %{name}.c
 
 %build
 gcc ${CFLAGS} -c %{SOURCE0} -o %{name}.o
-gcc ${LDFLAGS} %{name}.o %{_libdir}/%{name}-lib.a -o %{name}
+gcc ${LDFLAGS} %{name}.o %{_libdir}/%{name}-lib.a -o %{name}-ar
+gcc ${LDFLAGS} %{name}.o %{_libdir}/%{name}-lib.o -o %{name}-obj
 
 %check
-./%{name} | grep "Hello, world!"
+./%{name}-ar | grep "Hello, world!"
+./%{name}-obj | grep "Hello, world!"

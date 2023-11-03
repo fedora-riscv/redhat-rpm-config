@@ -23,7 +23,7 @@ validate() {
   fi
 }
 
-for arch in aarch64 armv7hl x86_64 riscv64; do
+for arch in aarch64 x86_64 riscv64; do
   case "$arch" in
     x86_64|aarch64)
       flags='-fno-omit-frame-pointer -mno-omit-leaf-frame-pointer'

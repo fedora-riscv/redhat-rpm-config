@@ -57,14 +57,14 @@
 # C compiler flags.  This is traditionally called CFLAGS in makefiles.
 # Historically also available as %%{optflags}, and %%build sets the
 # environment variable RPM_OPT_FLAGS to this value.
-%build_cflags %{optflags} %{?_distro_extra_cflags}
+%build_cflags %{__build_flags_lang_c} %{?_distro_extra_cflags}
 
 # C++ compiler flags.  This is traditionally called CXXFLAGS in makefiles.
-%build_cxxflags %{optflags} %{?_distro_extra_cxxflags}
+%build_cxxflags %{__build_flags_lang_cxx} %{?_distro_extra_cxxflags}
 
 # Fortran compiler flags.  Makefiles use both FFLAGS and FCFLAGS as
 # the corresponding variable names.
-%build_fflags %{optflags} -I%{_fmoddir} %{?_distro_extra_fflags}
+%build_fflags %{__build_flags_common} -I%{_fmoddir} %{?_distro_extra_fflags}
 
 # Vala compiler flags. This is used to set VALAFLAGS.
 %build_valaflags -g
@@ -72,7 +72,7 @@
 # When clang is used as a linker driver, it does not auto-detect the LTO
 # bytecode and neither does bfd, so we need to explicitly pass the -flto
 # flag when linking.
-%_clang_extra_ldflags %{?_lto_cflags} -fno-openmp-implicit-rpath
+%_clang_extra_ldflags %{?_lto_cflags}
 
 # Link editor flags.  This is usually called LDFLAGS in makefiles.
 # (Some makefiles use LFLAGS instead.)  The default value assumes that
@@ -92,6 +92,7 @@
   FFLAGS="${FFLAGS:-%{build_fflags}}" ; export FFLAGS ; \
   FCFLAGS="${FCFLAGS:-%{build_fflags}}" ; export FCFLAGS ; \
   VALAFLAGS="${VALAFLAGS:-%{build_valaflags}}" ; export VALAFLAGS ; \
+  RUSTFLAGS="${RUSTFLAGS:-%{build_rustflags}}" ; export RUSTFLAGS ; \
   LDFLAGS="${LDFLAGS:-%{build_ldflags}}" ; export LDFLAGS ; \
   LT_SYS_LIBRARY_PATH="${LT_SYS_LIBRARY_PATH:-%_libdir:}" ; export LT_SYS_LIBRARY_PATH ; \
   CC="${CC:-%{__cc}}" ; export CC ; \
@@ -112,13 +113,19 @@
 # Internal-only.  Do not use.  Expand a variable and strip the flags
 # not suitable to extension builders.
 %__extension_strip_flags() %{lua:
+--the only argument to this macro is the "name" of the flags we strip (e.g. cflags, ldflags, etc.)
 local name = rpm.expand("%{1}")
-local value = " " .. rpm.expand("%{build_" .. name .. "}")
-local specs_pattern = "%s+-specs=[^%s]+"
-local lto_flags_pattern = rpm.expand("%{?_lto_cflags}"):gsub("[%-%.]", "%%%1")
-local package_note_flags_pattern = "%-Wl,%S*package_note%S*"
-local result = value:gsub(specs_pattern, " "):gsub(lto_flags_pattern, ""):gsub(package_note_flags_pattern, "")
-print(result)
+--store all the individual flags in a variable as a continuous string
+local flags = rpm.expand("%{build_" .. name .. "}")
+--create an empty table for the minimal set of flags we wanna preserve
+local stripped_flags = { }
+--iterate over the individual flags and store the ones we want in the table as unique keys
+for flag in flags:gmatch("%S+") do
+  if flag:find("^%-fexceptions") or flag:find("^%-fcf%-protection") then
+    stripped_flags[flag] = true end
+  end
+--print out the finalized set of flags for use by the extension builders
+for k,_ in pairs(stripped_flags) do print(k .. " ") end
 }
 
 # Variants of CFLAGS, CXXFLAGS, FFLAGS, LDFLAGS for use within
@@ -137,7 +144,9 @@ print(result)
 
 # Architecture-specific support.  Internal.  Do not use directly.
 
-%__cflags_arch_x86_64 %[0%{?rhel} >= 9 ? "-march=x86-64-v2" : ""]
+%__cflags_arch_x86_64_v2 %[0%{?rhel} == 9 ? "-march=x86-64-v2" : ""]
+%__cflags_arch_x86_64_v3 %[0%{?rhel} > 9 ? "-march=x86-64-v3" : ""]
+%__cflags_arch_x86_64 %{__cflags_arch_x86_64_v2} %{__cflags_arch_x86_64_v3}
 
 # Also used for s390.
 %__cflags_arch_s390x %[0%{?rhel} >= 9 ? "-march=z14 -mtune=z15" : "-march=z13 -mtune=z14"]
@@ -305,6 +314,12 @@ print(result)
 # Use Zstandard compression for binary payloads
 %_binary_payload w19.zstdio
 
+#==============================================================================
+# --- Compiler flags control.
+#
+# Please consult buildflags.md for parts that can be configured
+# from RPM spec files.
+
 %_hardening_gcc_cflags   -specs=/usr/lib/rpm/redhat/redhat-hardened-cc1
 %_hardening_clang_cflags --config /usr/lib/rpm/redhat/redhat-hardened-clang.cfg
 %_hardening_cflags	 %{expand:%%{_hardening_%{toolchain}_cflags}} -fstack-protector-strong
@@ -376,12 +391,16 @@ print(result)
 %_fortify_level		3
 %_fortify_level_flags	%[ 0%{?_fortify_level} > 0 ? "-Wp,-U_FORTIFY_SOURCE,-D_FORTIFY_SOURCE=%{_fortify_level}" : "" ]
 
-# Some linkers default to a build-id algoritim that is not supported by rpmbuild,
+# This can be set to a positive integer to obtain increasing type
+# safety levels for C.  See buildflags.md.
+%build_type_safety_c 0
+
+# Some linkers default to a build-id algorithm that is not supported by rpmbuild,
 # so we need to specify the right algorithm to use.
 %_build_id_flags	-Wl,--build-id=sha1
 
 %_general_options       -O2 %{?_lto_cflags} -fexceptions -g -grecord-gcc-switches -pipe
-%_warning_options       -Wall -Werror=format-security
+%_warning_options       -Wall%[%__build_for_lang_any && "%toolchain" == "gcc" ? " -Wno-complain-wrong-lang" : ""]%[%__build_for_lang_c + %__build_for_lang_cxx ? " -Werror=format-security" : ""]%[%__build_for_lang_c && (%build_type_safety_c >= 1) ? " -Werror=implicit-function-declaration -Werror=implicit-int" : ""]%[%__build_for_lang_c && (%build_type_safety_c >= 2) ? " -Werror=int-conversion" : ""]%[%__build_for_lang_c && (%build_type_safety_c >= 3) ? " -Werror=incompatible-pointer-types" : ""]
 %_preprocessor_defines  %{_fortify_level_flags} -Wp,-D_GLIBCXX_ASSERTIONS
 
 # Common variables are no longer generated by default by gcc and clang
@@ -389,6 +408,22 @@ print(result)
 %_legacy_options	%{?_legacy_common_support: -fcommon}
 
 %__global_compiler_flags %{_general_options} %{_warning_options} %{_preprocessor_defines} %{_hardened_cflags} %{_annotation_cflags} %{_legacy_options}
+
+# Internal macros. Do not use directly.  These variables can be rebound
+# to suppress certain frontend-specific compiler flags (or in the case
+# of __build_for_lang_any, frontend-agnostic flags).  Dynamic scoping
+# and shadowing redefinitions are used for the __build_for_* variables
+# to remain largely compatible with existing spec files that have
+# hard-coded assumptions which macros assume which other macros.
+# The __build_flags_no_macro_warning construct suppresses a warning
+# about unused RPM macros.
+%__build_for_lang_c 1
+%__build_for_lang_cxx 1
+%__build_for_lang_any 1
+%__build_flags_no_macro_warning %[%__build_for_lang_c + %__build_for_lang_cxx + %__build_for_lang_any ? "" : ""]
+%__build_flags_common() %{expand:%define __build_for_lang_c 0}%{expand:%define __build_for_lang_cxx 0}%{expand:%define __build_for_lang_any 0}%{__build_flags_no_macro_warning}%{optflags}
+%__build_flags_lang_c() %{expand:%define __build_for_lang_cxx 0}%{expand:%define __build_for_lang_any 0}%{__build_flags_no_macro_warning}%{optflags}
+%__build_flags_lang_cxx() %{expand:%define __build_for_lang_c 0}%{expand:%define __build_for_lang_any 0}%{__build_flags_no_macro_warning}%{optflags}
 
 # Automatically trim changelog entries after 2 years
 %_changelog_trimage	%{expr:2*365*24*60*60}
