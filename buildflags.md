@@ -117,21 +117,27 @@ or:
 ### Controlling Type Safety
 
 The macro `%build_type_safety_c` can be set to change the C type
-safety level.  By default (value 0), all C constructs that GCC accepts
-for backwards compatibility with obsolete language standards are
-accepted during package builds.  Packages can set
-`%build_type_safety_c` to higher values to adopt future
-distribution-wide type-safety increases early.
+safety level.  The default level is 1, see below.  It can be set to 0
+to get historic levels of type safety.  Changing the type safety level
+may depend on correct `CFLAGS` propagation during the build.  The
+`%build_type_safety_c` macro needs to be set before `CFLAGS`-related
+macros are expanded by RPM (that is, earlier in the file works
+better).
 
-When changing the `%build_type_safety_c` level to increase it, spec
-file should use a construct like this to avoid *lowering* a future
-default:
+Packages can set `%build_type_safety_c` to higher values to adopt
+future distribution-wide type-safety increases early.  When changing
+the `%build_type_safety_c` level to increase it, spec file should use
+a construct like this to avoid *lowering* a future default:
 
 ```
 %if %build_type_safety_c < 2
-%global %build_type_safety_c 2
+%global build_type_safety_c 2
 %endif
 ```
+
+At level 0, all C constructs that GCC accepts for backwards
+compatibility with obsolete language standards are accepted during
+package builds.
 
 At level 1, the following additional error categories are enabled:
 
@@ -593,7 +599,11 @@ tuning in the `gcc` package.  These settings are:
   CPU level of zEC12, while optimizing for a subsequent CPU generation
   (z13).
 * **x86_64**: `-mtune=generic` selects tuning which is expected to
-   beneficial for a broad range of current CPUs.
+   beneficial for a broad range of current CPUs.  Distribution-specific
+   defaults for `-march=x86-64-v2` or `-march=x86-64-v3` may be
+   applied.  The default can be overriden (for any distribution)
+   by specifying `--target x86_64_v2`, `--target x86_64_v3`,
+   `--target x86_64_v4` in the `rpmbuild` invocation.
 * **aarch64** does not have any architecture-specific tuning.
 
 ### Vala-specific compiler flags

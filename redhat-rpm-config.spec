@@ -4,14 +4,14 @@
 # 2) When making changes, increment the version (in baserelease) by 1.
 #    rpmdev-bumpspec and other tools update the macro below, which is used
 #    in Version: to get the desired effect.
-%global baserelease 264
+%global baserelease 271
 
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.rv64.2%{?dist}
-# No version specified.
-License: GPL+
+Release: 1.rv64%{?dist}
+# config.guess, config.sub are GPL-3.0-or-later WITH Autoconf-exception-generic
+License: GPL-1.0-or-later AND GPL-2.0-or-later AND GPL-3.0-or-later WITH Autoconf-exception-generic AND Boehm-GC
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
 
 # Core rpm settings
@@ -46,10 +46,10 @@ Source107: macros.gap-srpm
 Source150: macros.build-constraints
 Source151: macros.dwz
 Source152: macros.fedora-misc
-Source153: macros.forge
 Source155: macros.ldconfig
 Source156: macros.vpath
 Source157: macros.shell-completions
+Source158: macros.rpmautospec
 
 # Build policy scripts
 # this comes from https://github.com/rpm-software-management/rpm/pull/344
@@ -81,7 +81,6 @@ Source701: brp-strip-lto
 
 # Convenience lua functions
 Source800: common.lua
-Source801: forge.lua
 
 # Documentation
 Source900: buildflags.md
@@ -92,6 +91,8 @@ Requires: coreutils
 
 Requires: efi-srpm-macros
 Requires: fonts-srpm-macros
+# ↓ Provides macros.forge and forge.lua originally shipped by us
+Requires: forge-srpm-macros
 Requires: ghc-srpm-macros
 Requires: go-srpm-macros
 # ↓ Provides kmod.attr originally shipped by us
@@ -106,7 +107,6 @@ Requires: qt5-srpm-macros
 Requires: qt6-srpm-macros
 # rust-srpm-macros v24 contains %%build_rustflags defintion
 Requires: rust-srpm-macros >= 24
-Requires: rpmautospec-rpm-macros
 Requires: package-notes-srpm-macros
 Requires: pyproject-srpm-macros
 
@@ -135,6 +135,8 @@ Requires: (gawk if clang)
 
 # -fstack-clash-protection and -fcf-protection require GCC 8.
 Conflicts: gcc < 8.0.1-0.22
+
+Obsoletes: rpmautospec-rpm-macros < 0.3.6
 
 Provides: system-rpm-config = %{version}-%{release}
 
@@ -172,7 +174,6 @@ install -p -m 644 -t %{buildroot}%{_fileattrsdir} *.attr
 
 mkdir -p %{buildroot}%{_rpmluadir}/fedora/{rpm,srpm}
 install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora common.lua
-install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 
 # This trigger is used to decide which version of the annobin plugin for gcc
 # should be used.  See comments in the script for full details.
@@ -237,15 +238,14 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %{_rpmconfigdir}/macros.d/macros.build-constraints
 %{_rpmconfigdir}/macros.d/macros.dwz
 %{_rpmconfigdir}/macros.d/macros.fedora-misc
-%{_rpmconfigdir}/macros.d/macros.forge
 %{_rpmconfigdir}/macros.d/macros.ldconfig
+%{_rpmconfigdir}/macros.d/macros.rpmautospec
 %{_rpmconfigdir}/macros.d/macros.shell-completions
 %{_rpmconfigdir}/macros.d/macros.vpath
 %dir %{_rpmluadir}/fedora
 %dir %{_rpmluadir}/fedora/srpm
 %dir %{_rpmluadir}/fedora/rpm
 %{_rpmluadir}/fedora/*.lua
-%{_rpmluadir}/fedora/srpm/*lua
 
 %attr(0755,-,-) %{rrcdir}/redhat-annobin-plugin-select.sh
 %verify(owner group mode) %{rrcdir}/redhat-annobin-cc1
@@ -255,6 +255,33 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Fri Nov 03 2023 Stephen Gallagher <sgallagh@redhat.com> - 271-1
+- ELN: Enable frame pointers for RHEL 11+ (for now)
+
+* Thu Oct  5 2023 Florian Weimer <fweimer@redhat.com> - 270-1
+- Disable -fstack-clash-protection on riscv64 (#2242327)
+
+* Thu Oct  5 2023 Nikita Popov <npopov@redhat.com> - 269-1
+- Use correct format specifier in brp-llvm-compile-lto-elf
+
+* Fri Sep 29 2023 Nikita Popov <npopov@redhat.com> - 268-1
+- Fix brp-llvm-compile-lto-elf parallelism with hardlinks (#2234024)
+
+* Tue Sep 26 2023 Florian Weimer <fweimer@redhat.com> - 267-1
+- Switch %%build_type_safety_c to 1 (#2142177)
+
+* Thu Sep 07 2023 Maxwell G <maxwell@gtmx.me> - 266-1
+- Split out forge macros to forge-srpm-macros package
+
+* Tue Aug 29 2023 Florian Weimer <fweimer@redhat.com> - 265-1
+- Add support for x86_64_v2, x86_64_v3, x86_64_v4 (#2233093)
+
+* Tue Aug 22 2023 Yaakov Selkowitz <yselkowi@redhat.com> - 264-1
+- Add macros.rpmautospec
+
+* Mon Aug 21 2023 Miroslav Suchy <msuchy@redhat.com> - 263-1
+- Migrate to SPDX
+
 * Thu Nov 23 2023  Zhengyu He <hezhy472013@gmail.com> - 264-1.rv64.2
 - Remove riscv64 support for ldc and mono
 
