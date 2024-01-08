@@ -9,7 +9,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.rv64.2%{?dist}
+Release: 1.rv64.3%{?dist}
 # No version specified.
 License: GPL+
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -255,6 +255,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora/srpm forge.lua
 %doc buildflags.md
 
 %changelog
+* Mon Jan 08 2024 Songsong Zhang <U2FsdGVkX1@gmail.com> - 264-1.rv64.3
+- Disable LTO (GCC, Clang) globally for riscv64
+
 * Thu Nov 23 2023  Zhengyu He <hezhy472013@gmail.com> - 264-1.rv64.2
 - Remove riscv64 support for ldc and mono
 
