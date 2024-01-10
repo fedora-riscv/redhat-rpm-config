@@ -9,7 +9,7 @@
 Summary: Red Hat specific rpm configuration files
 Name: redhat-rpm-config
 Version: %{baserelease}
-Release: 1.rv64%{?dist}
+Release: 1.rv64.2%{?dist}
 # config.guess, config.sub are GPL-3.0-or-later WITH Autoconf-exception-generic
 License: GPL-1.0-or-later AND GPL-2.0-or-later AND GPL-3.0-or-later WITH Autoconf-exception-generic AND Boehm-GC
 URL: https://src.fedoraproject.org/rpms/redhat-rpm-config
@@ -255,6 +255,9 @@ install -p -m 644 -t %{buildroot}%{_rpmluadir}/fedora common.lua
 %doc buildflags.md
 
 %changelog
+* Wed Jan 10 2024 Zhengyu He <hezhy472013@gmail.com> - 271-1.rv64.2
+- Disable LTO (GCC, Clang) globally for riscv64
+
 * Fri Nov 03 2023 Stephen Gallagher <sgallagh@redhat.com> - 271-1
 - ELN: Enable frame pointers for RHEL 11+ (for now)
 

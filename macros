@@ -380,10 +380,10 @@ for k,_ in pairs(stripped_flags) do print(k .. " ") end
 # to verify they have real sections/symbols after LTO stripping.  That
 # way we can detect installing an unusable .o/.a file.  This is on the TODO
 # list for F34.
-%_gcc_lto_cflags	-flto=auto -ffat-lto-objects
+%_gcc_lto_cflags	%{nil}
 # riscv64 does not have ld.gold support needed for LTO with Clang.
 %_clang_lto_cflags	%{nil}
-%_lto_cflags		%{expand:%%{_%{toolchain}_lto_cflags}}
+%_lto_cflags		%{nil}
 
 # Default fortification level.
 #   "%define _fortify_level 2" to downgrade and
